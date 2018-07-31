@@ -1,16 +1,18 @@
-import React from 'react';
+import React from "react";
+import Footer from "./footer/Footer";
 
 class App extends React.Component {
-  constructor(){
+  constructor() {
     super();
   }
 
-  render(){
+  render() {
     return (
       <div>
         React app goes here
+        <Footer />
       </div>
-    )
+    );
   }
 }
 
