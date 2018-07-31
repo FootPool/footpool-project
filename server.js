@@ -17,7 +17,7 @@ app.use("/static", express.static("static"));
 app.set("view engine", "hbs");
 
 app.get("/", function(req, res) {
-  res.render("index");
+  res.render("reset");
 });
 
 app.get("/users", function(req, res) {

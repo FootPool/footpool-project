@@ -27,7 +27,8 @@
     "pg-promise": "^8.4.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-router": "^4.3.1"
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
     "babel-jest": "^22.4.1",
