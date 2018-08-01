@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 class Pooldetail extends React.Component {
   constructor() {
@@ -16,7 +17,12 @@ class Pooldetail extends React.Component {
               <div>
                 <p>Member 1</p>
               </div>
-              <button type="Submit">Play now!</button>
+
+              <Link to="/placeyourguess">
+              <button type="Submit">
+                Play now!
+              </button>
+          </Link>
             </form>
           </div>
         </div>
