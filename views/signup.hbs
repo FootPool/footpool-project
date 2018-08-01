@@ -21,10 +21,11 @@
     <h1>Sign Up</h1>
   </div>
   <div>
-    <form>
-      <input type="text" placeholder="Username" />
-      <input type="text" placeholder="Email Address" />
-      <input type="text" placeholder="Password" />
+    <form id="signup-form">
+      <input id="new-username" type="text" placeholder="Username" />
+      <input id="new-email" type="text" placeholder="Email Address" />
+      <input id="new-password" type="text" placeholder="Password" />
+      <button type="submit">Sign Up</button>
     </form>
     <p>Already have a profile?
       <a href="/login">Login</a>
@@ -32,10 +33,8 @@
     <p>
       <a href="/reset">Forgotten details?</a>
     </p>
-    <div>
-      <button type="Submit">Sign Up</button>
-    </div>
   </div>
+  <script src="/static/signup.js"></script>
 </body>
 
 </html>
