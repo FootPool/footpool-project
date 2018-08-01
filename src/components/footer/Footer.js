@@ -11,7 +11,7 @@ function Footer() {
         </Link>
       </div>
       <div>
-        <Link to="/pools">
+        <Link to="/choosepool">
           <img src="/static/images/pools.svg" />
           <h2>Pools</h2>
         </Link>
