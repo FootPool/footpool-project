@@ -1,12 +1,26 @@
+<<<<<<< HEAD
+=======
+const pgp = require("pg-promise")();
+>>>>>>> master
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const db = pgp({
+  host: "localhost",
+  port: 5432,
+  database: process.env.DATABASE,
+  user: process.env.USERNAME,
+  password: process.env.PASSWORD
+});
+
+console.log(process.env.DATABASE);
 
 app.use(bodyParser.json());
 app.use("/static", express.static("static"));
 app.set("view engine", "hbs");
 
 app.get("/", function(req, res) {
+<<<<<<< HEAD
   res.render("homepage");
 });
 
@@ -20,6 +34,19 @@ app.get("/login", function(req, res) {
 
 app.get("/reset", function(req, res) {
   res.render("reset");
+=======
+  res.render("reset");
+});
+
+app.get("/users", function(req, res) {
+  db.any("SELECT * FROM fpuser")
+    .then(function(data) {
+      res.json(data);
+    })
+    .catch(function(error) {
+      res.json({ error: error.message });
+    });
+>>>>>>> master
 });
 
 app.listen(8080, function() {
