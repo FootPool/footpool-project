@@ -93,7 +93,6 @@ passport.use(
   new LocalStrategy(function(username, password, done) {
     getUserByUsername(username)
       .then(user => {
-        console.log("user: ", user);
         if (!user) return done(null, false);
 
         bcrypt
@@ -157,17 +156,11 @@ app.post("/signup", function(req, res) {
 });
 
 app.get("/", function(req, res) {
-  res.render("index");
+  res.render("homepage");
 });
 
-app.get("/users", function(req, res) {
-  db.any("SELECT * FROM fpuser")
-    .then(function(data) {
-      res.json(data);
-    })
-    .catch(function(error) {
-      res.json({ error: error.message });
-    });
+app.get("/index", function(req, res) {
+  res.render("index");
 });
 
 app.listen(8080, function() {
