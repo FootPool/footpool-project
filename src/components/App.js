@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Choosepool from "./choosepool/Choosepool";
 import Createpool from "./createpool/Createpool";
@@ -14,12 +15,14 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Header title="HomePage" />
         <Switch>
           <Route path="/choosepool" render={() => <Choosepool />} />
           <Route path="/createpool" render={() => <Createpool />} />
           <Route path="/joinpool" render={() => <Pool />} />
           <Route path="/pooldetail" render={() => <Pooldetail />} />
         </Switch>
+        FootPool - Social Pool Guessing
         <Footer />
       </div>
     );

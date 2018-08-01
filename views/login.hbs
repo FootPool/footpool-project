@@ -18,19 +18,22 @@
     </div>
   </header>
   <div>
-<h1>Log in</h1>
-</div>
-<div>
-  <form>
-    <input type="text" placeholder="Username"/>
-    <input type="text" placeholder="Password"/>
-  </form>
-    <p>No profile? <a href="#">Signup</a></p>
-    <p><a href="#">Forgotten details?</a></p>
-    <div>
-      <button type="Submit">Login</button>
-    </div>
-</div>
+    <h1>Log in</h1>
+  </div>
+  <div>
+    <form id="login-form">
+      <input id="username" type="text" placeholder="Username" />
+      <input id="password" type="text" placeholder="Password" />
+      <button type="submit">Login</button>
+    </form>
+    <p>No profile?
+      <a href="/signup">Signup</a>
+    </p>
+    <p>
+      <a href="/reset">Forgotten details?</a>
+    </p>
+  </div>
+  <script src="/static/login.js"></script>
 </body>
 
 </html>
