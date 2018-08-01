@@ -7,7 +7,7 @@ app.use('/static', express.static('static'));
 app.set('view engine', 'hbs');
 
 app.get('/', function(req, res){
-  res.render('reset');
+  res.render('index');
 })
 
 app.listen(8080, function(){
