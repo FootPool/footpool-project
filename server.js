@@ -10,8 +10,6 @@ const db = pgp({
   password: process.env.PASSWORD
 });
 
-console.log(process.env.DATABASE);
-
 app.use(bodyParser.json());
 app.use("/static", express.static("static"));
 app.set("view engine", "hbs");

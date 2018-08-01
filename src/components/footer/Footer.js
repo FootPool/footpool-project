@@ -5,7 +5,7 @@ function Footer() {
   return (
     <div>
       <div>
-        <Link to="/poolchoice">
+        <Link to="/choosepool">
           <img src="/static/images/home.svg" />
           <h2>Home</h2>
         </Link>
