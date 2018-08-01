@@ -1,7 +1,7 @@
 {
   "name": "own-project",
   "version": "1.0.0",
-  "description": "An app which allows customers to order food online",
+  "description": "A football pool game prediction App",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -24,9 +24,14 @@
     "hbs": "^4.0.1",
     "jest": "^22.3.0",
     "node-fetch": "^2.1.2",
+<<<<<<< HEAD
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+=======
     "pg-promise": "^8.4.5",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+>>>>>>> master
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1"
   },
