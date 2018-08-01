@@ -20,7 +20,7 @@ class Profile extends React.Component {
           Password
           <u> edit</u>
         </div>
-        <a href="/logout">
+        <a href="/logout" id="logout-btn">
           <p>
             <u>Logout</u>
           </p>
