@@ -65,7 +65,7 @@ passport.deserializeUser(function(id, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// RENDER HOME PAGE ON LOAD
+// RENDER PAGES
 
 app.get("/", function(req, res) {
   res.render("homepage");
@@ -88,15 +88,20 @@ app.get("/app", function(req, res) {
 });
 
 // AUTHENTICATE LOG IN
-passport.use(
-  new LocalStrategy(function(username, password) {
-    getUserByUsername(username).then(user => {
-      if (!user) return done(null, false);
 
-      bcrypt
-        .compare(password, fpuser.password)
-        .then(matches => (matches ? done(null, user) : done(null, false)));
-    });
+passport.use(
+  new LocalStrategy(function(username, password, done) {
+    getUserByUsername(username)
+      .then(user => {
+        console.log("user: ", user);
+        if (!user) return done(null, false);
+
+        bcrypt
+          .compare(password, user.password)
+          .then(matches => (matches ? done(null, user) : done(null, false)))
+          .catch(error => done(error, false));
+      })
+      .catch(error => done(error, false));
   })
 );
 
@@ -126,7 +131,7 @@ app.get("/signup", function(req, res) {
   res.render("signup");
 });
 
-app.post("signup", function(req, res) {
+app.post("/signup", function(req, res) {
   const { newUsername, newPassword, newEmail } = req.body;
 
   const SALT_ROUNDS = 12;
@@ -137,7 +142,7 @@ app.post("signup", function(req, res) {
       return bcrypt.hash(newPassword, salt);
     })
     .then(hashedPassword => {
-      db.one(
+      db.none(
         `INSERT INTO fpuser(
           username, password, email, score
         )
@@ -153,6 +158,16 @@ app.post("signup", function(req, res) {
 
 app.get("/", function(req, res) {
   res.render("index");
+});
+
+app.get("/users", function(req, res) {
+  db.any("SELECT * FROM fpuser")
+    .then(function(data) {
+      res.json(data);
+    })
+    .catch(function(error) {
+      res.json({ error: error.message });
+    });
 });
 
 app.listen(8080, function() {
