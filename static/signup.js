@@ -2,7 +2,7 @@ const signUp = document.querySelectorAll("#signup-form");
 signUp.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  const newUsername = document.querySelectorAll("#new-username".value);
+  const newUsername = document.querySelectorAll("#new-username").value;
   const newPassword = document.querySelectorAll("#new-password").value;
   const newEmail = document.querySelectorAll("#new-email").value;
   const newSecretAnswer = document.querySelectorAll("#new-secret-answer").value;
