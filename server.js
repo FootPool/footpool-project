@@ -16,6 +16,8 @@ const db = pgp({
   password: process.env.PASSWORD
 });
 
+app.use(bodyParser.json());
+app.use("/static", express.static("static"));
 app.set("view engine", "hbs");
 app.use("/static", express.static("static"));
 app.use(bodyParser.json());
@@ -66,6 +68,18 @@ app.use(passport.session());
 // RENDER HOME PAGE ON LOAD
 
 app.get("/", function(req, res) {
+  res.render("homepage");
+});
+
+app.get("/signup", function(req, res) {
+  res.render("signup");
+});
+
+app.get("/login", function(req, res) {
+  res.render("login");
+});
+
+app.get("/reset", function(req, res) {
   res.render("reset");
 });
 
