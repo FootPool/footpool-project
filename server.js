@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 const pgp = require("pg-promise")();
->>>>>>> master
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -20,7 +17,6 @@ app.use("/static", express.static("static"));
 app.set("view engine", "hbs");
 
 app.get("/", function(req, res) {
-<<<<<<< HEAD
   res.render("homepage");
 });
 
@@ -34,8 +30,6 @@ app.get("/login", function(req, res) {
 
 app.get("/reset", function(req, res) {
   res.render("reset");
-=======
-  res.render("reset");
 });
 
 app.get("/users", function(req, res) {
@@ -46,7 +40,6 @@ app.get("/users", function(req, res) {
     .catch(function(error) {
       res.json({ error: error.message });
     });
->>>>>>> master
 });
 
 app.listen(8080, function() {
