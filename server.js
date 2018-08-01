@@ -123,7 +123,7 @@ app.get("/signup", function(req, res) {
 });
 
 app.post("signup", function(req, res) {
-  const { newUsername, newPassword, newEmail, newSecretAnswer } = req.body;
+  const { newUsername, newPassword, newEmail } = req.body;
 
   const SALT_ROUNDS = 12;
 
@@ -135,10 +135,10 @@ app.post("signup", function(req, res) {
     .then(hashedPassword => {
       db.one(
         `INSERT INTO fpuser(
-          username, password, email, score, secret_answer
+          username, password, email, score
         )
-        VALUES($1, $2, $3, 0, $4) RETURNING id`,
-        [newUsername, hashedPassword, newEmail, newSecretAnswer]
+        VALUES($1, $2, $3, 0) RETURNING id`,
+        [newUsername, hashedPassword, newEmail]
       )
         .then(data => {
           res.status(200).end();
@@ -147,9 +147,9 @@ app.post("signup", function(req, res) {
     });
 });
 
-app.get('/', function(req, res){
-  res.render('index');
-})
+app.get("/", function(req, res) {
+  res.render("index");
+});
 
 app.listen(8080, function() {
   console.log("Listening on port 8080");

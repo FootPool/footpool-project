@@ -5,15 +5,13 @@ signUp.addEventListener("submit", function(event) {
   const newUsername = document.querySelectorAll("#new-username").value;
   const newPassword = document.querySelectorAll("#new-password").value;
   const newEmail = document.querySelectorAll("#new-email").value;
-  const newSecretAnswer = document.querySelectorAll("#new-secret-answer").value;
 
   fetch("/signup", {
     method: "POST",
     body: JSON.stringify({
       newUsername,
       newPassword,
-      newEmail,
-      newSecretAnswer
+      newEmail
     }),
     credentials: "same-origin",
     headers: {
