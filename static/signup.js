@@ -1,10 +1,10 @@
-const signUp = document.querySelectorAll("#signup-form");
+const signUp = document.querySelector("#signup-form");
 signUp.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  const newUsername = document.querySelectorAll("#new-username").value;
-  const newPassword = document.querySelectorAll("#new-password").value;
-  const newEmail = document.querySelectorAll("#new-email").value;
+  const newUsername = document.querySelector("#new-username").value;
+  const newPassword = document.querySelector("#new-password").value;
+  const newEmail = document.querySelector("#new-email").value;
 
   fetch("/signup", {
     method: "POST",
