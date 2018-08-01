@@ -1,17 +1,29 @@
 import React from "react";
 
 class Profile extends React.Component {
+  constructor() {
+    super();
+  }
+
   render() {
     return (
       <div>
-        <form>
-          <input placeholder="Username" />
-          <input placeholder="Email Address" />
-          <input placeholder="Password" />
-          <button>Update Details</button>
-        </form>
-        <a>
-          <p>Logout</p>
+        <div>
+          Username
+          <u> edit</u>
+        </div>
+        <div>
+          Email Address
+          <u> edit</u>
+        </div>
+        <div>
+          Password
+          <u> edit</u>
+        </div>
+        <a href="/logout">
+          <p>
+            <u>Logout</u>
+          </p>
         </a>
       </div>
     );

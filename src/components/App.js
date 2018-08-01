@@ -1,5 +1,7 @@
 import React from "react";
+import Profile from "./profile/Profile";
 import Footer from "./footer/Footer";
+import PlaceYourGuess from "./placeyourguess/PlaceYourGuess";
 
 class App extends React.Component {
   constructor() {
@@ -10,6 +12,8 @@ class App extends React.Component {
     return (
       <div>
         FootPool - Social Pool Guessing
+        <Profile />
+        <PlaceYourGuess />
         <Footer />
       </div>
     );
