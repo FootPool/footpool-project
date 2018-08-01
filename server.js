@@ -147,7 +147,9 @@ app.post("signup", function(req, res) {
     });
 });
 
-// LISTEN
+app.get('/', function(req, res){
+  res.render('index');
+})
 
 app.listen(8080, function() {
   console.log("Listening on port 8080");
