@@ -83,6 +83,10 @@ app.get("/reset", function(req, res) {
   res.render("reset");
 });
 
+app.get("/app", function(req, res) {
+  res.render("index");
+});
+
 // AUTHENTICATE LOG IN
 passport.use(
   new LocalStrategy(function(username, password) {
