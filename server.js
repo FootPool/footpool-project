@@ -48,6 +48,14 @@ function getUserById(id) {
   );
 }
 
+function isLoggedIn(req, res, next) {
+  if (req.user && req.user.id) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+}
+
 // SERIALISE USER
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -93,7 +101,6 @@ passport.use(
   new LocalStrategy(function(username, password, done) {
     getUserByUsername(username)
       .then(user => {
-        console.log("user: ", user);
         if (!user) return done(null, false);
 
         bcrypt
@@ -157,17 +164,11 @@ app.post("/signup", function(req, res) {
 });
 
 app.get("/", function(req, res) {
-  res.render("index");
+  res.render("homepage");
 });
 
-app.get("/users", function(req, res) {
-  db.any("SELECT * FROM fpuser")
-    .then(function(data) {
-      res.json(data);
-    })
-    .catch(function(error) {
-      res.json({ error: error.message });
-    });
+app.get("/*", isLoggedIn, function(req, res) {
+  res.render("index", { user: req.user });
 });
 
 app.listen(8080, function() {
