@@ -18,7 +18,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-
         <Header title="HomePage" />
         <Switch>
           <Route path="/choosepool" render={() => <Choosepool />} />

@@ -26367,6 +26367,10 @@ var _reactModal = __webpack_require__(/*! react-modal */ "./node_modules/react-m
 
 var _reactModal2 = _interopRequireDefault(_reactModal);
 
+var _getFixtures = __webpack_require__(/*! ../../services/getFixtures */ "./src/services/getFixtures.js");
+
+var _getFixtures2 = _interopRequireDefault(_getFixtures);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26384,7 +26388,8 @@ var PlaceYourGuess = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (PlaceYourGuess.__proto__ || Object.getPrototypeOf(PlaceYourGuess)).call(this));
 
     _this.state = {
-      showModal: false
+      showModal: false,
+      fixtures: undefined
     };
 
     _this.handleOpenModal = _this.handleOpenModal.bind(_this);
@@ -26403,71 +26408,48 @@ var PlaceYourGuess = function (_React$Component) {
       this.setState({ showModal: false });
     }
   }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      (0, _getFixtures2.default)().then(function (data) {
+        return _this2.setState(function () {
+          return {
+            fixtures: data
+          };
+        });
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react2.default.createElement(
         "div",
         null,
         _react2.default.createElement(
-          "form",
+          "div",
           null,
-          _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(
-              "button",
-              null,
-              "Spurs Win"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              " Draw"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              "Celtic Win"
-            )
-          ),
-          _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(
-              "button",
-              null,
-              "Man U Win"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              "Draw"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              "Arsenal Win"
-            )
-          ),
-          _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(
-              "button",
-              null,
-              "Liverpool Win"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              "Draw"
-            ),
-            _react2.default.createElement(
-              "button",
-              null,
-              "Bolton Win"
-            )
-          )
+          this.state.fixtures && this.state.fixtures.matches ? this.state.fixtures.matches.map(function (match, index) {
+            return _react2.default.createElement(
+              "div",
+              { key: "" },
+              _react2.default.createElement(
+                "button",
+                null,
+                match.homeTeam.name
+              ),
+              _react2.default.createElement(
+                "button",
+                null,
+                "Draw"
+              ),
+              _react2.default.createElement(
+                "button",
+                null,
+                match.awayTeam.name
+              )
+            );
+          }) : null
         ),
         _react2.default.createElement(
           "button",
@@ -26841,6 +26823,37 @@ _reactDom2.default.render(_react2.default.createElement(
   null,
   _react2.default.createElement(_App2.default, null)
 ), document.getElementById("root"));
+
+/***/ }),
+
+/***/ "./src/services/getFixtures.js":
+/*!*************************************!*\
+  !*** ./src/services/getFixtures.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function getFixtures() {
+
+  return fetch("http://api.football-data.org/v2/competitions/2021/matches?matchday=1", {
+    method: "GET",
+    headers: {
+      "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
+    }
+  }).then(function (response) {
+    return response.json();
+  }).catch(function (error) {
+    return alert("RED CARD! I couldn't find the fixtures!");
+  });
+}
+
+exports.default = getFixtures;
 
 /***/ })
 
