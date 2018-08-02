@@ -48,6 +48,14 @@ function getUserById(id) {
   );
 }
 
+function isLoggedIn(req, res, next) {
+  if (req.user && req.user.id) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+}
+
 // SERIALISE USER
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -159,8 +167,8 @@ app.get("/", function(req, res) {
   res.render("homepage");
 });
 
-app.get("/index", function(req, res) {
-  res.render("index");
+app.get("/*", isLoggedIn, function(req, res) {
+  res.render("index", { user: req.user });
 });
 
 app.listen(8080, function() {
