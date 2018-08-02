@@ -26111,7 +26111,7 @@ exports.default = Createpool;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26129,64 +26129,80 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Fixtures = function (_React$Component) {
-    _inherits(Fixtures, _React$Component);
+  _inherits(Fixtures, _React$Component);
 
-    function Fixtures() {
-        _classCallCheck(this, Fixtures);
+  function Fixtures() {
+    _classCallCheck(this, Fixtures);
 
-        return _possibleConstructorReturn(this, (Fixtures.__proto__ || Object.getPrototypeOf(Fixtures)).call(this));
-    }
+    return _possibleConstructorReturn(this, (Fixtures.__proto__ || Object.getPrototypeOf(Fixtures)).call(this));
+  }
 
-    _createClass(Fixtures, [{
-        key: "render",
-        value: function render() {
-            return _react2.default.createElement(
-                "div",
-                null,
-                _react2.default.createElement(
-                    "div",
-                    null,
-                    "Fixture List",
-                    _react2.default.createElement(
-                        "div",
-                        null,
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team A vs Team B"
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team C vs Team D"
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team E vs Team F"
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team G vs Team H"
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team I vs Team J"
-                        ),
-                        _react2.default.createElement(
-                            "p",
-                            null,
-                            "Team K vs Team L"
-                        )
-                    )
-                )
-            );
+  _createClass(Fixtures, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      fetch("http://api.football-data.org/v2/competitions/2021/matches?matchday=1", {
+        method: "GET",
+        headers: {
+          "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
         }
-    }]);
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return console.log(data);
+      }).catch(function (error) {
+        return alert("RED CARD! I couldn't find the fixtures!");
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        null,
+        _react2.default.createElement(
+          "div",
+          null,
+          "Fixture List",
+          _react2.default.createElement(
+            "div",
+            null,
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team A vs Team B"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team C vs Team D"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team E vs Team F"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team G vs Team H"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team I vs Team J"
+            ),
+            _react2.default.createElement(
+              "p",
+              null,
+              "Team K vs Team L"
+            )
+          )
+        )
+      );
+    }
+  }]);
 
-    return Fixtures;
+  return Fixtures;
 }(_react2.default.Component);
 
 exports.default = Fixtures;
