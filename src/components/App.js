@@ -1,14 +1,15 @@
 import React from "react";
 import Profile from "./profile/Profile";
-import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Fixtures from "./fixtures/Fixtures";
 import Choosepool from "./choosepool/Choosepool";
 import Createpool from "./createpool/Createpool";
-import PlaceYourGuess from "./placeyourguess/PlaceYourGuess"
+import PlaceYourGuess from "./placeyourguess/PlaceYourGuess";
 import Pool from "./pool/Pool";
 import Pooldetail from "./pooldetails/Pooldetail";
 import { Switch, Route } from "react-router-dom";
+
+import "../../static/styles/style.scss";
 
 class App extends React.Component {
   constructor() {
@@ -18,7 +19,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header title="HomePage" />
         <Switch>
           <Route path="/choosepool" render={() => <Choosepool />} />
           <Route path="/createpool" render={() => <Createpool />} />
@@ -28,7 +28,6 @@ class App extends React.Component {
           <Route path="/fixtures" render={() => <Fixtures />} />
           <Route path="/placeyourguess" render={() => <PlaceYourGuess />} />
         </Switch>
-        FootPool - Social Pool Guessing
         <Footer />
       </div>
     );
