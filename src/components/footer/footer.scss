@@ -1,0 +1,25 @@
+.footer--container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  justify-content: center;
+  background-color: var(--primary-color);
+}
+
+.footer--nav-item {
+  text-align: center;
+  padding: 20px 10px;
+}
+
+.footer--nav-icon {
+  justify-content: space-around;
+  width: 50px;
+  height: auto;
+}
+
+.footer--nav-title {
+  color: var(--font-color);
+}

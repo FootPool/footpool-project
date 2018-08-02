@@ -151,7 +151,36 @@ app.post("signup", function(req, res) {
     });
 });
 
+// PAGES WITHIN APP
 app.get("/", function(req, res) {
+  res.render("index");
+});
+
+app.get("/choosepool", function(req, res) {
+  res.render("index");
+});
+
+app.get("/createpool", function(req, res) {
+  res.render("index");
+});
+
+app.get("/joinpool", function(req, res) {
+  res.render("index");
+});
+
+app.get("/pooldetail", function(req, res) {
+  res.render("index");
+});
+
+app.get("/profile", function(req, res) {
+  res.render("index");
+});
+
+app.get("/fixtures", function(req, res) {
+  res.render("index");
+});
+
+app.get("/placeyourguess", function(req, res) {
   res.render("index");
 });
 

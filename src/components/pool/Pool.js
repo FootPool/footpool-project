@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../header/Header";
 
 class Pool extends React.Component {
   constructor() {
@@ -8,6 +9,7 @@ class Pool extends React.Component {
   render() {
     return (
       <div>
+        <Header title="Join a Pool" />
         <div>
           <div>Pool name</div>
           <div>Pool members</div>
@@ -21,7 +23,9 @@ class Pool extends React.Component {
                 <p>Pool 4</p>
                 <p>Pool 5</p>
               </div>
-              <button type="Submit" onClick="alert('Hello I am alert')">Join!</button>
+              <button type="Submit" onClick="alert('Hello I am alert')">
+                Join!
+              </button>
             </form>
           </div>
         </div>

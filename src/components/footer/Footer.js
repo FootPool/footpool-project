@@ -3,23 +3,23 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <div>
-      <div>
+    <div className="footer--container">
+      <div className="footer--nav-item">
         <Link to="/choosepool">
-          <img src="/static/images/home.svg" />
-          <h2>Home</h2>
+          <img src="/static/images/home.svg" className="footer--nav-icon" />
+          <h4 className="footer--nav-title">Home</h4>
         </Link>
       </div>
-      <div>
+      <div className="footer--nav-item">
         <Link to="/fixtures">
-          <img src="/static/images/fixtures.svg" />
-          <h2>Fixtures</h2>
+          <img src="/static/images/fixtures.svg" className="footer--nav-icon" />
+          <h4 className="footer--nav-title">Fixtures</h4>
         </Link>
       </div>
-      <div>
+      <div className="footer--nav-item">
         <Link to="/profile">
-          <img src="/static/images/profile.svg" />
-          <h2>Profile</h2>
+          <img src="/static/images/profile.svg" className="footer--nav-icon" />
+          <h4 className="footer--nav-title">Profile</h4>
         </Link>
       </div>
     </div>
