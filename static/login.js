@@ -1,9 +1,9 @@
-const logIn = document.querySelectorAll("#login-form");
+const logIn = document.querySelector("#login-form");
 logIn.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  const username = document.querySelectorAll("#username").value;
-  const password = document.querySelectorAll("#password").value;
+  const username = document.querySelector("#username").value;
+  const password = document.querySelector("#password").value;
 
   fetch("/login", {
     method: "POST",

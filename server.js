@@ -48,6 +48,14 @@ function getUserById(id) {
   );
 }
 
+function isLoggedIn(req, res, next) {
+  if (req.user && req.user.id) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+}
+
 // SERIALISE USER
 passport.serializeUser(function(user, done) {
   done(null, user.id);
@@ -65,7 +73,7 @@ passport.deserializeUser(function(id, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// RENDER HOME PAGE ON LOAD
+// RENDER PAGES
 
 app.get("/", function(req, res) {
   res.render("homepage");
@@ -88,15 +96,19 @@ app.get("/app", function(req, res) {
 });
 
 // AUTHENTICATE LOG IN
-passport.use(
-  new LocalStrategy(function(username, password) {
-    getUserByUsername(username).then(user => {
-      if (!user) return done(null, false);
 
-      bcrypt
-        .compare(password, fpuser.password)
-        .then(matches => (matches ? done(null, user) : done(null, false)));
-    });
+passport.use(
+  new LocalStrategy(function(username, password, done) {
+    getUserByUsername(username)
+      .then(user => {
+        if (!user) return done(null, false);
+
+        bcrypt
+          .compare(password, user.password)
+          .then(matches => (matches ? done(null, user) : done(null, false)))
+          .catch(error => done(error, false));
+      })
+      .catch(error => done(error, false));
   })
 );
 
@@ -126,7 +138,7 @@ app.get("/signup", function(req, res) {
   res.render("signup");
 });
 
-app.post("signup", function(req, res) {
+app.post("/signup", function(req, res) {
   const { newUsername, newPassword, newEmail } = req.body;
 
   const SALT_ROUNDS = 12;
@@ -137,7 +149,7 @@ app.post("signup", function(req, res) {
       return bcrypt.hash(newPassword, salt);
     })
     .then(hashedPassword => {
-      db.one(
+      db.none(
         `INSERT INTO fpuser(
           username, password, email, score
         )
@@ -153,7 +165,11 @@ app.post("signup", function(req, res) {
 
 // PAGES WITHIN APP
 app.get("/", function(req, res) {
-  res.render("index");
+  res.render("homepage");
+});
+
+app.get("/*", isLoggedIn, function(req, res) {
+  res.render("index", { user: req.user });
 });
 
 app.get("/choosepool", function(req, res) {
