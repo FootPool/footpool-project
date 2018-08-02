@@ -1,0 +1,30 @@
+.profile--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.profile--user-option {
+  border: 1px solid grey;
+  padding: 20px 0px;
+}
+
+.profile--edit-icon {
+  height: 0.5rem;
+  width: auto;
+}
+
+.profile--edit-modal {
+  align-content: center;
+  margin-top: 200px;
+  height: 100px;
+  width: 100%;
+  background-color: var(--primary-color);
+}
+
+.profile--modal-input {
+  padding: 10px 7px;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../header/Header";
 
 class Fixtures extends React.Component {
   constructor() {
@@ -23,6 +24,7 @@ class Fixtures extends React.Component {
   render() {
     return (
       <div>
+        <Header title="Fixtures" />
         <div>
           Fixture List
           <div>
