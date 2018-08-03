@@ -21,7 +21,7 @@ class Pooldetail extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="pooldetail--container">
         <Header title="Pool Details" />
         <div>
           <div>Pool Members</div>

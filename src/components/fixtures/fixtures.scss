@@ -1,0 +1,11 @@
+.fixtures--container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  height: 100vh;
+}
+
+.fixtures--fixture-list {
+  text-align: center;
+}

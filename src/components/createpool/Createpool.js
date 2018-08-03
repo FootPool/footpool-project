@@ -8,20 +8,31 @@ class Createpool extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="createpool--container">
         <Header title="Create a Pool" />
-        <div>Create Pool</div>
-        <div>
-          <form>
-            <input type="text" placeholder="Pool name" />
-            <input type="text" placeholder="Duration" />
-            <input type="text" placeholder="Starting week" />
+        <form className="createpool-form">
+          <input
+            type="text"
+            placeholder="Pool name"
+            className="createpool--form-input"
+          />
+          <input
+            type="text"
+            placeholder="Duration"
+            className="createpool--form-input"
+          />
+          <input
+            type="text"
+            placeholder="Starting week"
+            className="createpool--form-input"
+          />
 
-            <Link to="/pooldetail">
-              <button type="Submit">Submit Pool</button>
-            </Link>
-          </form>
-        </div>
+          <Link to="/pooldetail">
+            <button type="Submit" className="submit-button">
+              Submit Pool
+            </button>
+          </Link>
+        </form>
       </div>
     );
   }
