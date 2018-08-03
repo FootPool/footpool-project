@@ -7,6 +7,7 @@ const expressSession = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 const app = express();
 const bcrypt = require("bcrypt");
+const dotenv = require("dotenv").config({ path: "./.envrc" });
 
 const db = pgp({
   host: "localhost",
@@ -15,6 +16,8 @@ const db = pgp({
   user: process.env.USERNAME,
   password: process.env.PASSWORD
 });
+
+console.log(process.env.DATABASE);
 
 app.use(bodyParser.json());
 app.use("/static", express.static("static"));
@@ -91,10 +94,6 @@ app.get("/reset", function(req, res) {
   res.render("reset");
 });
 
-app.get("/app", function(req, res) {
-  res.render("index");
-});
-
 // AUTHENTICATE LOG IN
 
 passport.use(
@@ -163,41 +162,53 @@ app.post("/signup", function(req, res) {
     });
 });
 
-// PAGES WITHIN APP
-app.get("/", function(req, res) {
-  res.render("homepage");
+// CREATE POOL
+
+app.post("/createpool", function(req, res) {
+  const { poolName, matchWeek } = req.body;
+
+  let poolId = "";
+
+  db.one(
+    `INSERT INTO pool(poolname, date_created, match_week)
+    VALUES($1, current_timestamp, $2) RETURNING id`,
+    [poolName, matchWeek]
+  )
+    .then((poolId = data.id))
+    .then(
+      fetch(
+        `http://api.football-data.org/v2/competitions/2021/matches?matchday=${matchWeek}`,
+        {
+          method: "GET",
+          headers: {
+            "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
+          }
+        }
+      )
+    )
+    .then(response => response.json())
+    .then(
+      data.map(fixture => {
+        db.one(
+          `INSERT INTO game(pool_id, home_team, away_team, match_id)
+          VALUES($1, $2, $3) RETURNING id`,
+          [
+            poolId,
+            fixture.matches.homeTeam,
+            fixture.matches.awayTeam,
+            fixture.matches.match
+          ]
+        );
+      })
+    )
+    .then(data => {
+      res.status(200).end();
+    })
+    .catch(error => res.json({ error: error.message }));
 });
 
 app.get("/*", isLoggedIn, function(req, res) {
   res.render("index", { user: req.user });
-});
-
-app.get("/choosepool", function(req, res) {
-  res.render("index");
-});
-
-app.get("/createpool", function(req, res) {
-  res.render("index");
-});
-
-app.get("/joinpool", function(req, res) {
-  res.render("index");
-});
-
-app.get("/pooldetail", function(req, res) {
-  res.render("index");
-});
-
-app.get("/profile", function(req, res) {
-  res.render("index");
-});
-
-app.get("/fixtures", function(req, res) {
-  res.render("index");
-});
-
-app.get("/placeyourguess", function(req, res) {
-  res.render("index");
 });
 
 app.listen(8080, function() {
