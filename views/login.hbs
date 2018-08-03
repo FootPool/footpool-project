@@ -5,26 +5,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="/static/styles/loggedoutstyles.css">
   <title>Login</title>
 </head>
 
-<body>
-  <header>
-    <button>
-      Return
-    </button>
-    <div>
-      Logo
-    </div>
+<body class="site--container">
+  <header class="site--header">
+
+    <h1 class="site--title">
+      <span>FootP</span>
+      <span class='site--title-emoji'>⚽</span>
+      <span>ol</span>
+    </h1>
+
+    <ul class="site--nav-links">
+      <li class="site--nav-link">
+        <a href="/signup" class='site--link-button'>Sign Up</a>
+      </li>
+      <li class="site--nav-link">
+        <a href="/login" class="site--link-button">Login</a>
+      </li>
+    </ul>
   </header>
-  <div>
-    <h1>Log in</h1>
-  </div>
-  <div>
-    <form id="login-form">
-      <input id="username" type="text" placeholder="Username" />
-      <input id="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
+
+  <div class="site__form-container">
+    <form id="login-form" class="site__form">
+      <input id="username" type="text" placeholder="Username" class="site__form--input" />
+      <input id="password" type="password" placeholder="Password" class="site__form--input" />
+      <button type="submit" class="action-button">Login</button>
     </form>
     <p>No profile?
       <a href="/signup">Signup</a>
