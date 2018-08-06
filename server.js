@@ -183,40 +183,40 @@ app.post("/pool", function(req, res) {
       updatePoolId(data.id);
       console.log(data);
     })
-    .then(
-      fetch(
+    .then(() => {
+      return fetch(
         `http://api.football-data.org/v2/competitions/2021/matches?matchday=${matchWeek}`,
         {
           headers: {
             "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
           }
         }
-      )
-    )
+      );
+    })
     .then(response => {
-      response.json();
+      return response.json();
       console.log(response);
     })
-    .then(data =>
-      data.matches.map(fixture => {
-        console.log(fixture);
+    .then(data => {
+      return db.tx(t => {
+        const queries = data.matches.map(fixture => {
+          console.log(fixture);
 
-        db.one(
-          `INSERT INTO game(pool_id, home_team, away_team, match_id)
-          VALUES($1, $2, $3, $4) RETURNING id`,
-          [
-            poolId,
-            fixture.matches.homeTeam.name,
-            fixture.matches.awayTeam.name,
-            fixture.matches.id
-          ]
-        );
-      })
-    )
+          t.one(
+            `INSERT INTO game(pool_id, home_team, away_team, match_id)
+            VALUES($1, $2, $3, $4) RETURNING id`,
+            [poolId, fixture.homeTeam.name, fixture.awayTeam.name, fixture.id]
+          );
+        });
+        return t.batch(queries);
+      });
+    })
     .then(data => {
       res.status(200).end();
     })
-    .catch(error => res.json({ error: error.message }));
+    .catch(error => {
+      res.json({ error: error.message });
+    });
 });
 
 // PROTECTED ROUTES
