@@ -180,6 +180,10 @@ app.get("/createpool", function(req, res) {
   res.render("index");
 });
 
+app.post("/createpool", function(req, res) {
+  console.log(req)
+})
+
 app.get("/joinpool", function(req, res) {
   res.render("index");
 });

@@ -27260,33 +27260,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var DRAW = 0;
 
-var Checkbox = function Checkbox(type, name, matchId, teamId, teamName, checked) {
-  var id = matchId + "-" + type;
-  return _react2.default.createElement(
-    "label",
-    {
-      className: "radiobtn",
-      htmlFor: id,
-      onClick: function onClick() {
-        return undefined.handleSelect(matchId, teamId);
-      }
-    },
-    _react2.default.createElement("input", {
-      id: id,
-      className: "radiobtn__input",
-      type: "radio",
-      value: teamId,
-      name: name,
-      checked: checked
-    }),
-    _react2.default.createElement(
-      "span",
-      { className: "radiobtn__text" },
-      teamName
-    )
-  );
-};
-
 var Pooldetail = function (_React$Component) {
   _inherits(Pooldetail, _React$Component);
 
@@ -27316,6 +27289,7 @@ var Pooldetail = function (_React$Component) {
     key: "handleCloseModal",
     value: function handleCloseModal() {
       this.setState({ showModal: false });
+      //Submit to database guesses state
     }
   }, {
     key: "componentDidMount",
@@ -27323,7 +27297,8 @@ var Pooldetail = function (_React$Component) {
       var _this2 = this;
 
       (0, _getFixtures2.default)().then(function (data) {
-        return _this2.setState(function () {
+        _this2.setState(function () {
+          console.log(data);
           return {
             fixtures: data
           };
@@ -27487,6 +27462,27 @@ var Pooldetail = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Pooldetail;
+
+// const Checkbox = (type, name, matchId, teamId, teamName, checked) => {
+//   const id = matchId + "-" + type;
+//   return (
+//     <label
+//       className="radiobtn"
+//       htmlFor={id}
+//       onClick={() => this.handleSelect(matchId, teamId)}
+//     >
+//       <input
+//         id={id}
+//         className="radiobtn__input"
+//         type="radio"
+//         value={teamId}
+//         name={name}
+//         checked={checked}
+//       />
+//       <span className="radiobtn__text">{teamName}</span>
+//     </label>
+//   );
+// };
 
 // <Checkbox
 //   type="home"
