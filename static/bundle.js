@@ -26653,18 +26653,62 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var Loader = function Loader() {
+  return _react2.default.createElement("div", null);
+};
+
 var Createpool = function (_React$Component) {
   _inherits(Createpool, _React$Component);
 
   function Createpool() {
     _classCallCheck(this, Createpool);
 
-    return _possibleConstructorReturn(this, (Createpool.__proto__ || Object.getPrototypeOf(Createpool)).call(this));
+    var _this = _possibleConstructorReturn(this, (Createpool.__proto__ || Object.getPrototypeOf(Createpool)).call(this));
+
+    _this.state = {
+      poolSaving: false,
+      poolSaved: false
+    };
+
+    _this.addNewPool = _this.addNewPool.bind(_this);
+    return _this;
   }
 
   _createClass(Createpool, [{
+    key: "addNewPool",
+    value: function addNewPool(event) {
+      var _this2 = this;
+
+      event.preventDefault();
+
+      this.setState({ poolSaving: true });
+
+      var poolName = document.querySelector("#pool-name").value;
+      var matchWeek = document.querySelector("#match-week").value;
+
+      console.log("Name: ", poolName, "Match: ", matchWeek);
+
+      fetch("/pool", {
+        method: "POST",
+        body: JSON.stringify({ poolName: poolName, matchWeek: matchWeek }),
+        credentials: "same-origin",
+        headers: {
+          "content-type": "application/json"
+        }
+      }).then(function (response) {
+        if (response.status === 200) {
+          _this2.setState({ poolSaved: true });
+          window.location.pathname = "/pooldetail";
+        } else {
+          alert("Sorry, your pool was offside. Try again.");
+        }
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      if (this.state.poolSaved) return _react2.default.createElement(_reactRouterDom.Redirect, { to: "/pooldetail" });
+
       return _react2.default.createElement(
         "div",
         null,
@@ -26679,21 +26723,17 @@ var Createpool = function (_React$Component) {
           null,
           _react2.default.createElement(
             "form",
-            null,
-            _react2.default.createElement("input", { type: "text", placeholder: "Pool name" }),
-            _react2.default.createElement("input", { type: "text", placeholder: "Duration" }),
-            _react2.default.createElement("input", { type: "text", placeholder: "Starting week" }),
+            { onSubmit: this.addNewPool },
+            _react2.default.createElement("input", { id: "pool-name", type: "text", placeholder: "Pool name" }),
+            _react2.default.createElement("input", { id: "match-week", type: "text", placeholder: "Starting week" }),
             _react2.default.createElement(
-              _reactRouterDom.Link,
-              { to: "/pooldetail" },
-              _react2.default.createElement(
-                "button",
-                { type: "Submit" },
-                "Submit Pool"
-              )
+              "button",
+              { type: "submit" },
+              "Submit Pool"
             )
           )
-        )
+        ),
+        this.state.poolSaving ? _react2.default.createElement(Loader, null) : null
       );
     }
   }]);
@@ -27283,17 +27323,6 @@ var Pooldetail = function (_React$Component) {
   _createClass(Pooldetail, [{
     key: "handleOpenModal",
     value: function handleOpenModal() {
-      this.setState({ showModal: true });
-    }
-  }, {
-    key: "handleCloseModal",
-    value: function handleCloseModal() {
-      this.setState({ showModal: false });
-      //Submit to database guesses state
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
       var _this2 = this;
 
       (0, _getFixtures2.default)().then(function (data) {
@@ -27304,11 +27333,21 @@ var Pooldetail = function (_React$Component) {
           };
         });
       });
+      this.setState({ showModal: true });
     }
   }, {
+    key: "handleCloseModal",
+    value: function handleCloseModal() {
+      Object.keys(this.state.guesses).length !== 10 ? alert("Yellow Card! Place your bets on ALL of the games before submitting.") : this.setState({ showModal: false });
+      //Submit to database guesses state
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {}
+  }, {
     key: "handleSelect",
-    value: function handleSelect(matchId, teamId) {
-      var guesses = _extends({}, this.state.guesses, _defineProperty({}, matchId, teamId));
+    value: function handleSelect(matchId, choice) {
+      var guesses = _extends({}, this.state.guesses, _defineProperty({}, matchId, choice));
       this.setState({ guesses: guesses });
     }
   }, {
@@ -27379,16 +27418,16 @@ var Pooldetail = function (_React$Component) {
                           className: "radiobtn",
                           htmlFor: match.id + "-hw",
                           onClick: function onClick() {
-                            return _this3.handleSelect(match.id, match.homeTeam.id);
+                            return _this3.handleSelect(match.id, "HOME_TEAM");
                           }
                         },
                         _react2.default.createElement("input", {
                           id: match.id + "-hw",
                           className: "radiobtn__input",
                           type: "radio",
-                          value: match.homeTeam.name,
+                          value: "HOME_TEAM",
                           name: name,
-                          checked: selectedMatchValue === match.homeTeam.id
+                          checked: selectedMatchValue === "HOME_TEAM"
                         }),
                         _react2.default.createElement(
                           "span",
@@ -27402,16 +27441,16 @@ var Pooldetail = function (_React$Component) {
                           className: "radiobtn",
                           htmlFor: match.id + "-dr",
                           onClick: function onClick() {
-                            return _this3.handleSelect(match.id, DRAW);
+                            return _this3.handleSelect(match.id, "DRAW");
                           }
                         },
                         _react2.default.createElement("input", {
                           id: match.id + "-dr",
                           className: "radiobtn__input",
                           type: "radio",
-                          value: "Draw",
+                          value: "DRAW",
                           name: name,
-                          checked: selectedMatchValue === DRAW
+                          checked: selectedMatchValue === "DRAW"
                         }),
                         _react2.default.createElement(
                           "span",
@@ -27425,16 +27464,16 @@ var Pooldetail = function (_React$Component) {
                           className: "radiobtn",
                           htmlFor: match.id + "-aw",
                           onClick: function onClick() {
-                            return _this3.handleSelect(match.id, match.awayTeam.id);
+                            return _this3.handleSelect(match.id, "AWAY_TEAM");
                           }
                         },
                         _react2.default.createElement("input", {
                           id: match.id + "-aw",
                           className: "radiobtn__input",
                           type: "radio",
-                          value: match.awayTeam.name,
+                          value: "AWAY_TEAM",
                           name: name,
-                          checked: selectedMatchValue === match.awayTeam.id
+                          checked: selectedMatchValue === "AWAY_TEAM"
                         }),
                         _react2.default.createElement(
                           "span",

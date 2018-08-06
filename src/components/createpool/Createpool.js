@@ -36,7 +36,7 @@ class Createpool extends React.Component {
     }).then(response => {
       if (response.status === 200) {
         this.setState({ poolSaved: true });
-        window.location.pathname = "/pooldetails";
+        window.location.pathname = "/pooldetail";
       } else {
         alert("Sorry, your pool was offside. Try again.");
       }
