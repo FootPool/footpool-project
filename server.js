@@ -8,6 +8,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const app = express();
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({ path: "./.envrc" });
+const fetch = require("node-fetch");
 
 const db = pgp({
   host: "localhost",
@@ -164,39 +165,50 @@ app.post("/signup", function(req, res) {
 
 // CREATE POOL
 
-app.post("/createpool", function(req, res) {
+app.post("/pool", function(req, res) {
   const { poolName, matchWeek } = req.body;
 
   let poolId = "";
+
+  function updatePoolId(id) {
+    poolId = id;
+  }
 
   db.one(
     `INSERT INTO pool(poolname, date_created, match_week)
     VALUES($1, current_timestamp, $2) RETURNING id`,
     [poolName, matchWeek]
   )
-    .then((poolId = data.id))
+    .then(data => {
+      updatePoolId(data.id);
+      console.log(data);
+    })
     .then(
       fetch(
         `http://api.football-data.org/v2/competitions/2021/matches?matchday=${matchWeek}`,
         {
-          method: "GET",
           headers: {
             "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
           }
         }
       )
     )
-    .then(response => response.json())
-    .then(
-      data.map(fixture => {
+    .then(response => {
+      response.json();
+      console.log(response);
+    })
+    .then(data =>
+      data.matches.map(fixture => {
+        console.log(fixture);
+
         db.one(
           `INSERT INTO game(pool_id, home_team, away_team, match_id)
-          VALUES($1, $2, $3) RETURNING id`,
+          VALUES($1, $2, $3, $4) RETURNING id`,
           [
             poolId,
-            fixture.matches.homeTeam,
-            fixture.matches.awayTeam,
-            fixture.matches.match
+            fixture.matches.homeTeam.name,
+            fixture.matches.awayTeam.name,
+            fixture.matches.id
           ]
         );
       })
@@ -206,6 +218,8 @@ app.post("/createpool", function(req, res) {
     })
     .catch(error => res.json({ error: error.message }));
 });
+
+// PROTECTED ROUTES
 
 app.get("/*", isLoggedIn, function(req, res) {
   res.render("index", { user: req.user });
