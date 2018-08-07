@@ -1,3 +1,11 @@
 body {
   margin: 0;
 }
+
+GuessContainer {
+  display: flex;
+}
+
+GuessContainer_guess {
+  justify-content: space-between;
+}
