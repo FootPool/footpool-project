@@ -26452,12 +26452,33 @@ var App = function (_React$Component) {
   function App() {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+
+    _this.state = {
+      pool: "",
+      week: "",
+      poolId: "",
+      user: window.user
+    };
+
+    _this.receivePoolDetails = _this.receivePoolDetails.bind(_this);
+    return _this;
   }
 
   _createClass(App, [{
+    key: "receivePoolDetails",
+    value: function receivePoolDetails(poolId, pool, week) {
+      this.setState({
+        poolId: poolId,
+        pool: pool,
+        week: week
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         "div",
         null,
@@ -26467,15 +26488,26 @@ var App = function (_React$Component) {
           _react2.default.createElement(_reactRouterDom.Route, { path: "/choosepool", render: function render() {
               return _react2.default.createElement(_Choosepool2.default, null);
             } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: "/createpool", render: function render() {
-              return _react2.default.createElement(_Createpool2.default, null);
-            } }),
+          _react2.default.createElement(_reactRouterDom.Route, {
+            path: "/createpool",
+            render: function render() {
+              return _react2.default.createElement(_Createpool2.default, { receivePoolDetails: _this2.receivePoolDetails });
+            }
+          }),
           _react2.default.createElement(_reactRouterDom.Route, { path: "/joinpool", render: function render() {
               return _react2.default.createElement(_Pool2.default, null);
             } }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: "/pooldetail", render: function render() {
-              return _react2.default.createElement(_Pooldetail2.default, null);
-            } }),
+          _react2.default.createElement(_reactRouterDom.Route, {
+            path: "/pooldetail",
+            render: function render() {
+              return _react2.default.createElement(_Pooldetail2.default, {
+                pool: _this2.state.pool,
+                week: _this2.state.week,
+                user: _this2.state.user,
+                poolId: _this2.state.poolId
+              });
+            }
+          }),
           _react2.default.createElement(_reactRouterDom.Route, { path: "/profile", render: function render() {
               return _react2.default.createElement(_Profile2.default, null);
             } }),
@@ -26670,23 +26702,32 @@ var Createpool = function (_React$Component) {
       poolSaved: false
     };
 
+    _this.validatePool = _this.validatePool.bind(_this);
     _this.addNewPool = _this.addNewPool.bind(_this);
     return _this;
   }
 
   _createClass(Createpool, [{
-    key: "addNewPool",
-    value: function addNewPool(event) {
-      var _this2 = this;
-
+    key: "poolDetailsReceiver",
+    value: function poolDetailsReceiver(poolId, pool, week) {
+      this.props.receivePoolDetails(poolId, pool, week);
+    }
+  }, {
+    key: "validatePool",
+    value: function validatePool(event) {
       event.preventDefault();
-
-      this.setState({ poolSaving: true });
 
       var poolName = document.querySelector("#pool-name").value;
       var matchWeek = document.querySelector("#match-week").value;
 
-      console.log("Name: ", poolName, "Match: ", matchWeek);
+      poolName === "" || matchWeek === undefined ? alert("DISSENT! Fill out the pool name AND the match week or you're getting sent off!") : this.addNewPool(poolName, matchWeek);
+    }
+  }, {
+    key: "addNewPool",
+    value: function addNewPool(poolName, matchWeek) {
+      var _this2 = this;
+
+      this.setState({ poolSaving: true });
 
       fetch("/pool", {
         method: "POST",
@@ -26697,11 +26738,21 @@ var Createpool = function (_React$Component) {
         }
       }).then(function (response) {
         if (response.status === 200) {
-          _this2.setState({ poolSaved: true });
-          window.location.pathname = "/pooldetail";
+          return response.json();
         } else {
           alert("Sorry, your pool was offside. Try again.");
         }
+      }).then(function (data) {
+        _this2.setState({
+          poolSaved: true,
+          poolName: poolName,
+          matchWeek: matchWeek,
+          poolId: data.poolId
+        }, function () {
+          return _this2.poolDetailsReceiver(_this2.state.poolId, poolName, matchWeek);
+        });
+      }).catch(function (error) {
+        return alert("Sorry, your pool was offside. Try again.");
       });
     }
   }, {
@@ -26723,7 +26774,7 @@ var Createpool = function (_React$Component) {
           null,
           _react2.default.createElement(
             "form",
-            { onSubmit: this.addNewPool },
+            { onSubmit: this.validatePool },
             _react2.default.createElement("input", { id: "pool-name", type: "text", placeholder: "Pool name" }),
             _react2.default.createElement("input", { id: "match-week", type: "text", placeholder: "Starting week" }),
             _react2.default.createElement(
@@ -27303,31 +27354,69 @@ var DRAW = 0;
 var Pooldetail = function (_React$Component) {
   _inherits(Pooldetail, _React$Component);
 
-  function Pooldetail() {
+  function Pooldetail(props) {
     _classCallCheck(this, Pooldetail);
 
-    var _this = _possibleConstructorReturn(this, (Pooldetail.__proto__ || Object.getPrototypeOf(Pooldetail)).call(this));
+    var _this = _possibleConstructorReturn(this, (Pooldetail.__proto__ || Object.getPrototypeOf(Pooldetail)).call(this, props));
 
     _this.state = {
       showModal: false,
       fixtures: undefined,
-      guesses: {}
+      guesses: {},
+      user: "",
+      pool: "",
+      poolId: "",
+      isValid: false
     };
 
     _this.handleOpenModal = _this.handleOpenModal.bind(_this);
     _this.handleCloseModal = _this.handleCloseModal.bind(_this);
     _this.handleSelect = _this.handleSelect.bind(_this);
+    _this.sendBetsToDb = _this.sendBetsToDb.bind(_this);
+    _this.validateUserInPool = _this.validateUserInPool.bind(_this);
     return _this;
   }
 
   _createClass(Pooldetail, [{
-    key: "handleOpenModal",
-    value: function handleOpenModal() {
+    key: "validateUserInPool",
+    value: function validateUserInPool(user, pool) {
       var _this2 = this;
 
-      (0, _getFixtures2.default)().then(function (data) {
-        _this2.setState(function () {
-          console.log(data);
+      fetch("/isuserinpool/" + user.id + "/" + pool.id, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json"
+        }
+      }).then(function (response) {
+        if (response.status === 200) {
+          _this2.setState({
+            isValid: true
+          });
+        } else {
+          alert("You haven't made your guesses yet.");
+        }
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.setState({
+        user: this.props.user,
+        pool: this.props.pool
+      });
+
+      var user = this.state.user;
+      var pool = this.state.pool;
+
+      this.validateUserInPool(user, pool);
+    }
+  }, {
+    key: "handleOpenModal",
+    value: function handleOpenModal() {
+      var _this3 = this;
+
+      (0, _getFixtures2.default)(this.props.week).then(function (data) {
+        _this3.setState(function () {
           return {
             fixtures: data
           };
@@ -27338,12 +27427,32 @@ var Pooldetail = function (_React$Component) {
   }, {
     key: "handleCloseModal",
     value: function handleCloseModal() {
-      Object.keys(this.state.guesses).length !== 10 ? alert("Yellow Card! Place your bets on ALL of the games before submitting.") : this.setState({ showModal: false });
-      //Submit to database guesses state
+      var user = this.props.user;
+      var pool = this.props.pool;
+      var guesses = this.state.guesses;
+
+      Object.keys(this.state.guesses).length !== 10 ? alert("Yellow Card! Place your bets on ALL of the games before submitting.") : this.sendBetsToDb(pool, user, guesses);
     }
   }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {}
+    key: "sendBetsToDb",
+    value: function sendBetsToDb(pool, user, guesses) {
+      this.setState({ showModal: false });
+
+      fetch("/placebet", {
+        method: "POST",
+        body: JSON.stringify({ user: user, pool: pool, guesses: guesses }),
+        credentials: "same-origin",
+        headers: {
+          "content-type": "application/json"
+        }
+      }).then(function (response) {
+        if (response.status === 200) {
+          console.log("Placing bets worked!");
+        } else {
+          alert("That hit the post (in a bad way).");
+        }
+      });
+    }
   }, {
     key: "handleSelect",
     value: function handleSelect(matchId, choice) {
@@ -27353,147 +27462,154 @@ var Pooldetail = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
-      console.log(this.state.guesses);
-      return _react2.default.createElement(
-        "div",
-        null,
-        _react2.default.createElement(_Header2.default, { title: "Pool Details" }),
-        _react2.default.createElement(
+      if (this.state.isValid) {
+        return _react2.default.createElement(
           "div",
           null,
-          _react2.default.createElement(
-            "div",
-            null,
-            "Pool Members"
-          ),
-          _react2.default.createElement(
-            "div",
-            null,
-            "Score"
-          ),
+          "YOU HAVE PLACED YOUR BETS! \uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25"
+        );
+      } else {
+        return _react2.default.createElement(
+          "div",
+          null,
+          _react2.default.createElement(_Header2.default, { title: "Pool Details" }),
           _react2.default.createElement(
             "div",
             null,
             _react2.default.createElement(
-              "form",
+              "div",
+              null,
+              "Pool Members"
+            ),
+            _react2.default.createElement(
+              "div",
+              null,
+              "Score"
+            ),
+            _react2.default.createElement(
+              "div",
               null,
               _react2.default.createElement(
-                "div",
+                "form",
                 null,
                 _react2.default.createElement(
-                  "p",
+                  "div",
                   null,
-                  "Member 1"
+                  _react2.default.createElement(
+                    "p",
+                    null,
+                    "Member 1"
+                  )
                 )
-              )
-            ),
-            _react2.default.createElement(
-              "button",
-              { onClick: this.handleOpenModal },
-              "Play Now!"
-            ),
-            _react2.default.createElement(
-              _reactModal2.default,
-              {
-                isOpen: this.state.showModal,
-                contentLabel: "Guesses Submitted Successfully"
-              },
-              _react2.default.createElement(
-                "div",
-                null,
-                this.state.fixtures && this.state.fixtures.matches ? this.state.fixtures.matches.map(function (match, index) {
-                  var name = "match" + index;
-                  var selectedMatchValue = _this3.state.guesses[match.id];
-                  return _react2.default.createElement(
-                    "form",
-                    { action: "" },
-                    _react2.default.createElement(
-                      "div",
-                      { className: "row" },
-                      _react2.default.createElement(
-                        "label",
-                        {
-                          className: "radiobtn",
-                          htmlFor: match.id + "-hw",
-                          onClick: function onClick() {
-                            return _this3.handleSelect(match.id, "HOME_TEAM");
-                          }
-                        },
-                        _react2.default.createElement("input", {
-                          id: match.id + "-hw",
-                          className: "radiobtn__input",
-                          type: "radio",
-                          value: "HOME_TEAM",
-                          name: name,
-                          checked: selectedMatchValue === "HOME_TEAM"
-                        }),
-                        _react2.default.createElement(
-                          "span",
-                          { className: "radiobtn__text" },
-                          match.homeTeam.name
-                        )
-                      ),
-                      _react2.default.createElement(
-                        "label",
-                        {
-                          className: "radiobtn",
-                          htmlFor: match.id + "-dr",
-                          onClick: function onClick() {
-                            return _this3.handleSelect(match.id, "DRAW");
-                          }
-                        },
-                        _react2.default.createElement("input", {
-                          id: match.id + "-dr",
-                          className: "radiobtn__input",
-                          type: "radio",
-                          value: "DRAW",
-                          name: name,
-                          checked: selectedMatchValue === "DRAW"
-                        }),
-                        _react2.default.createElement(
-                          "span",
-                          { className: "radiobtn__text" },
-                          "Draw"
-                        )
-                      ),
-                      _react2.default.createElement(
-                        "label",
-                        {
-                          className: "radiobtn",
-                          htmlFor: match.id + "-aw",
-                          onClick: function onClick() {
-                            return _this3.handleSelect(match.id, "AWAY_TEAM");
-                          }
-                        },
-                        _react2.default.createElement("input", {
-                          id: match.id + "-aw",
-                          className: "radiobtn__input",
-                          type: "radio",
-                          value: "AWAY_TEAM",
-                          name: name,
-                          checked: selectedMatchValue === "AWAY_TEAM"
-                        }),
-                        _react2.default.createElement(
-                          "span",
-                          { className: "radiobtn__text" },
-                          match.awayTeam.name
-                        )
-                      )
-                    )
-                  );
-                }) : null
               ),
               _react2.default.createElement(
                 "button",
-                { onClick: this.handleCloseModal },
-                "Play"
+                { onClick: this.handleOpenModal },
+                "Play Now!"
+              ),
+              _react2.default.createElement(
+                _reactModal2.default,
+                {
+                  isOpen: this.state.showModal,
+                  contentLabel: "Guesses Submitted Successfully"
+                },
+                _react2.default.createElement(
+                  "div",
+                  null,
+                  this.state.fixtures && this.state.fixtures.matches ? this.state.fixtures.matches.map(function (match, index) {
+                    var name = "match" + index;
+                    var selectedMatchValue = _this4.state.guesses[match.id];
+                    return _react2.default.createElement(
+                      "form",
+                      { key: match.id, action: "" },
+                      _react2.default.createElement(
+                        "div",
+                        { className: "row" },
+                        _react2.default.createElement(
+                          "label",
+                          {
+                            className: "radiobtn",
+                            htmlFor: match.id + "-hw",
+                            onClick: function onClick() {
+                              return _this4.handleSelect(match.id, "HOME_TEAM");
+                            }
+                          },
+                          _react2.default.createElement("input", {
+                            id: match.id + "-hw",
+                            className: "radiobtn__input",
+                            type: "radio",
+                            value: "HOME_TEAM",
+                            name: name,
+                            checked: selectedMatchValue === "HOME_TEAM"
+                          }),
+                          _react2.default.createElement(
+                            "span",
+                            { className: "radiobtn__text" },
+                            match.homeTeam.name
+                          )
+                        ),
+                        _react2.default.createElement(
+                          "label",
+                          {
+                            className: "radiobtn",
+                            htmlFor: match.id + "-dr",
+                            onClick: function onClick() {
+                              return _this4.handleSelect(match.id, "DRAW");
+                            }
+                          },
+                          _react2.default.createElement("input", {
+                            id: match.id + "-dr",
+                            className: "radiobtn__input",
+                            type: "radio",
+                            value: "DRAW",
+                            name: name,
+                            checked: selectedMatchValue === "DRAW"
+                          }),
+                          _react2.default.createElement(
+                            "span",
+                            { className: "radiobtn__text" },
+                            "Draw"
+                          )
+                        ),
+                        _react2.default.createElement(
+                          "label",
+                          {
+                            className: "radiobtn",
+                            htmlFor: match.id + "-aw",
+                            onClick: function onClick() {
+                              return _this4.handleSelect(match.id, "AWAY_TEAM");
+                            }
+                          },
+                          _react2.default.createElement("input", {
+                            id: match.id + "-aw",
+                            className: "radiobtn__input",
+                            type: "radio",
+                            value: "AWAY_TEAM",
+                            name: name,
+                            checked: selectedMatchValue === "AWAY_TEAM"
+                          }),
+                          _react2.default.createElement(
+                            "span",
+                            { className: "radiobtn__text" },
+                            match.awayTeam.name
+                          )
+                        )
+                      )
+                    );
+                  }) : null
+                ),
+                _react2.default.createElement(
+                  "button",
+                  { onClick: this.handleCloseModal },
+                  "Play"
+                )
               )
             )
           )
-        )
-      );
+        );
+      }
     }
   }]);
 
@@ -27830,9 +27946,8 @@ _reactDom2.default.render(_react2.default.createElement(
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-function getFixtures() {
-
-  return fetch("http://api.football-data.org/v2/competitions/2021/matches?matchday=1", {
+function getFixtures(week) {
+  return fetch("http://api.football-data.org/v2/competitions/2021/matches?matchday=" + week, {
     method: "GET",
     headers: {
       "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"

@@ -13,18 +13,29 @@ class Createpool extends React.Component {
       poolSaved: false
     };
 
+    this.validatePool = this.validatePool.bind(this);
     this.addNewPool = this.addNewPool.bind(this);
   }
 
-  addNewPool(event) {
-    event.preventDefault();
+  poolDetailsReceiver(poolId, pool, week) {
+    this.props.receivePoolDetails(poolId, pool, week);
+  }
 
-    this.setState({ poolSaving: true });
+  validatePool(event) {
+    event.preventDefault();
 
     const poolName = document.querySelector("#pool-name").value;
     const matchWeek = document.querySelector("#match-week").value;
 
-    console.log("Name: ", poolName, "Match: ", matchWeek);
+    poolName === "" || matchWeek === undefined
+      ? alert(
+          "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
+        )
+      : this.addNewPool(poolName, matchWeek);
+  }
+
+  addNewPool(poolName, matchWeek) {
+    this.setState({ poolSaving: true });
 
     fetch("/pool", {
       method: "POST",
@@ -33,14 +44,26 @@ class Createpool extends React.Component {
       headers: {
         "content-type": "application/json"
       }
-    }).then(response => {
-      if (response.status === 200) {
-        this.setState({ poolSaved: true });
-        window.location.pathname = "/pooldetail";
-      } else {
-        alert("Sorry, your pool was offside. Try again.");
-      }
-    });
+    })
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          alert("Sorry, your pool was offside. Try again.");
+        }
+      })
+      .then(data => {
+        this.setState(
+          {
+            poolSaved: true,
+            poolName,
+            matchWeek,
+            poolId: data.poolId
+          },
+          () => this.poolDetailsReceiver(this.state.poolId, poolName, matchWeek)
+        );
+      })
+      .catch(error => alert("Sorry, your pool was offside. Try again."));
   }
 
   render() {
@@ -51,7 +74,7 @@ class Createpool extends React.Component {
         <Header title="Create a Pool" />
         <div>Create Pool</div>
         <div>
-          <form onSubmit={this.addNewPool}>
+          <form onSubmit={this.validatePool}>
             <input id="pool-name" type="text" placeholder="Pool name" />
             <input id="match-week" type="text" placeholder="Starting week" />
 
