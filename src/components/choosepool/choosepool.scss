@@ -1,5 +1,8 @@
 .choosepool--container {
   display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+  padding-right: 2rem;
   height: 100vh;
 }
 
@@ -7,6 +10,24 @@
   text-align: center;
 }
 
-.choosepool--fixture-list {
+.choosepool--pool-list {
   justify-content: center;
+}
+
+.choosepool--pool-item {
+  border: 1px solid lightgrey;
+  padding: 20px 0px;
+}
+
+.choosepool--option-buttons-container {
+  text-align: center;
+  width: 100%;
+}
+
+.choosepool--option-button {
+  align-items: center;
+  padding: 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--tertiary-color);
 }

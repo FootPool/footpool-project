@@ -1,4 +1,4 @@
 .envrc
 /node_modules
 *.log
-/static.bundle.js.map
+bundle.*

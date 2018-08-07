@@ -5,33 +5,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="/static/styles/loggedoutstyles.css">
   <title>Login</title>
 </head>
 
-<body>
-  <header>
-    <button>
-      Return
-    </button>
-    <div>
-      Logo
-    </div>
+<body class="site--container">
+  <header class="site--header">
+
+    <a href="/">
+      <h1 class="site--title">
+        <span>FootP</span>
+        <span class='site--title-emoji'>⚽⚽</span>
+        <span>l</span>
+      </h1>
+    </a>
+
+    <ul class="site--nav-links">
+      <li class="site--nav-link">
+        <a href="/signup" class='site--link-button'>Sign Up</a>
+      </li>
+      <li class="site--nav-link">
+        <a href="/login" class="site--link-button link-active">Login</a>
+      </li>
+    </ul>
   </header>
-  <div>
-    <h1>Log in</h1>
-  </div>
-  <div>
-    <form id="login-form">
-      <input id="username" type="text" placeholder="Username" />
-      <input id="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
-    </form>
-    <p>No profile?
-      <a href="/signup">Signup</a>
-    </p>
-    <p>
-      <a href="/reset">Forgotten details?</a>
-    </p>
+
+  <div class="site__form-container">
+    <div class="site__form--box">
+      <form id="login-form" class="site__form">
+        <input id="username" type="text" placeholder="Username" class="site__form--input" />
+        <input id="password" type="password" placeholder="Password" class="site__form--input" />
+        <button type="submit" class="action-button">Login</button>
+      </form>
+      <p>No profile?
+        <a href="/signup">Signup</a>
+      </p>
+      {{!--
+      <p>
+        <a href="/reset">Forgotten details?</a>
+      </p> --}}
+    </div>
   </div>
   <script src="/static/login.js"></script>
 </body>

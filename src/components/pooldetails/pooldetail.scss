@@ -1,0 +1,27 @@
+.pooldetail--container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  height: 100vh;
+}
+
+.row {
+    margin: 10px;
+  }
+  
+  .radiobtn {
+    padding: 5px;
+    background: green;
+    color: white;
+  }
+  
+  .radiobtn__input {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .radiobtn__input:checked + span {
+    color: yellow;
+  }

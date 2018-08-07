@@ -1,11 +1,13 @@
 import React from "react";
 import ReactModal from "react-modal";
+import getFixtures from "../../services/getFixtures";
 
 class PlaceYourGuess extends React.Component {
   constructor() {
     super();
     this.state = {
-      showModal: false
+      showModal: false,
+      fixtures: undefined
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
@@ -20,26 +22,28 @@ class PlaceYourGuess extends React.Component {
     this.setState({ showModal: false });
   }
 
+  componentDidMount() {
+    getFixtures().then(data => this.setState(() => {
+        return {
+          fixtures: data
+        }
+      })
+    )}
+
   render() {
     return (
       <div>
-        <form>
-          <div>
-            <button>Spurs Win</button>
-            <button> Draw</button>
-            <button>Celtic Win</button>
-          </div>
-          <div>
-            <button>Man U Win</button>
-            <button>Draw</button>
-            <button>Arsenal Win</button>
-          </div>
-          <div>
-            <button>Liverpool Win</button>
-            <button>Draw</button>
-            <button>Bolton Win</button>
-          </div>
-        </form>
+        <div>
+          {
+            this.state.fixtures && this.state.fixtures.matches
+            ?
+            this.state.fixtures.matches.map((match, index) => {
+              return <div key=""><button>{match.homeTeam.name}</button><button>Draw</button><button>{match.awayTeam.name}</button></div>
+            })
+            :
+            null
+          }
+      </div>
 
         <button onClick={this.handleOpenModal}>Submit</button>
         <ReactModal
