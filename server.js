@@ -66,7 +66,7 @@ function getUserByUsername(username) {
 
 function getUserById(id) {
   return db.one(
-    `SELECT * FROM fpuser
+    `SELECT id, username, email FROM fpuser
     WHERE id = $1`,
     [id]
   );
@@ -201,7 +201,6 @@ app.post("/pool", function(req, res) {
   )
     .then(data => {
       updatePoolId(data.id);
-      console.log(data);
     })
     .then(() => {
       return fetch(
@@ -215,13 +214,10 @@ app.post("/pool", function(req, res) {
     })
     .then(response => {
       return response.json();
-      console.log(response);
     })
     .then(data => {
       return db.tx(t => {
         const queries = data.matches.map(fixture => {
-          console.log(fixture);
-
           t.one(
             `INSERT INTO game(pool_id, home_team, away_team, match_id)
             VALUES($1, $2, $3, $4) RETURNING id`,
@@ -232,7 +228,62 @@ app.post("/pool", function(req, res) {
       });
     })
     .then(data => {
+      res.json({
+        poolId
+      });
+    })
+    .catch(error => {
+      res.json({ error: error.message });
+    });
+});
+
+// PLACE BETS
+
+app.post("/placebet", function(req, res) {
+  const { user, pool, guesses } = req.body;
+
+  db.one(
+    `SELECT id FROM pool
+    WHERE poolname = $1`,
+    [pool]
+  )
+    .then(data => {
+      return db.tx(t => {
+        const results = Object.entries(guesses).map(guess =>
+          t.none(
+            `INSERT INTO bet(user_id, bet, match_id, pool_id)
+            VALUES ($1, $2, $3, $4)`,
+            [user.id, guess[1], parseInt(guess[0], 10), data.id]
+          )
+        );
+        return t.batch(results);
+      });
+    })
+    .then(data => {
       res.status(200).end();
+    })
+    .catch(error => {
+      res.json({ error: error.message });
+    });
+});
+
+// VALIDATE USER IN POOL
+
+app.get("/isuserinpool/:userId/:poolName", function(req, res) {
+  const userId = req.params.userId;
+  const poolName = req.params.poolName;
+
+  db.one(
+    `SELECT count(*) FROM bet, pool
+      WHERE bet.user_id = $1
+      AND bet.pool_id = pool.id
+      AND pool.poolName = $2`,
+    [userId, poolName]
+  )
+    .then(data => {
+      res.json({
+        hasBets: data.count !== "0"
+      });
     })
     .catch(error => {
       res.json({ error: error.message });
