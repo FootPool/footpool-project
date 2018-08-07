@@ -50,8 +50,9 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "dev": "webpack --mode development",
+    "dev": "webpack --mode development --watch",
     "server": "NODE_ENV=development nodemon server.js -w server -i server/static",
+    "prestart": "npm run build",
     "start": "NODE_ENV=production node server.js",
     "test": "jest"
   }
