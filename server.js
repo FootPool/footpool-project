@@ -5,10 +5,30 @@ const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
-const app = express();
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({ path: "./.envrc" });
 const fetch = require("node-fetch");
+const io = require("socket.io");
+
+const app = express();
+const server = require("http").createServer(app);
+const socket = io(server);
+socket.on("connection", function(client) {
+  client.on("event", function(data) {
+    console.log("data:", data);
+  });
+  client.on("join", function(data) {
+    console.log("join: data =", data);
+    client.emit("message", "Howdy from the server!");
+  });
+  client.on("disconnect", function() {
+    console.log("disconnected");
+  });
+  // const dummy = setInterval(() => {
+  //   const score = 10;
+  //   client.emit("message", { score });
+  // }, 1000);
+});
 
 const db = pgp({
   host: "localhost",
@@ -53,7 +73,7 @@ function getUserById(id) {
 }
 
 function isLoggedIn(req, res, next) {
-  if (req.user && req.user.id) {
+  if (process.env.NODE_ENV === "development" || (req.user && req.user.id)) {
     next();
   } else {
     res.redirect("/login");
@@ -276,6 +296,6 @@ app.get("/*", isLoggedIn, function(req, res) {
   res.render("index", { user: req.user });
 });
 
-app.listen(8080, function() {
+server.listen(8080, function() {
   console.log("Listening on port 8080");
 });

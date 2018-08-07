@@ -2,9 +2,12 @@
 @import "./_colors";
 @import "./_fonts";
 @import "./_global";
-// @import "./_layout";
+@import "./_modals";
 
 // Component Files
 @import "../../src/components/footer/footer.scss";
 @import "../../src/components/profile/profile.scss";
+@import "../../src/components/fixtures/fixtures.scss";
+@import "../../src/components/choosepool/choosepool.scss";
+@import "../../src/components/createpool/createpool.scss";
 @import "../../src/components/pooldetails/pooldetail.scss";

@@ -1,9 +1,16 @@
 import React from "react";
+import io from "socket.io-client";
 import Header from "../header/Header";
 
 class Fixtures extends React.Component {
   constructor() {
     super();
+
+    this.socket = io.connect("http://localhost:8080");
+    this.socket.on("connect", data => {
+      this.socket.emit("join", "hello world from client");
+    });
+    this.socket.on("message", data => console.log(data));
   }
 
   componentDidMount() {
@@ -23,18 +30,17 @@ class Fixtures extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="fixtures--container">
         <Header title="Fixtures" />
-        <div>
-          Fixture List
-          <div>
-            <p>Team A vs Team B</p>
-            <p>Team C vs Team D</p>
-            <p>Team E vs Team F</p>
-            <p>Team G vs Team H</p>
-            <p>Team I vs Team J</p>
-            <p>Team K vs Team L</p>
-          </div>
+        <div className="fixtures--fixture-list">
+          <h2>Fixture List</h2>
+
+          <p>Team A vs Team B</p>
+          <p>Team C vs Team D</p>
+          <p>Team E vs Team F</p>
+          <p>Team G vs Team H</p>
+          <p>Team I vs Team J</p>
+          <p>Team K vs Team L</p>
         </div>
       </div>
     );

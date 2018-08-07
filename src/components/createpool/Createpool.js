@@ -70,7 +70,7 @@ class Createpool extends React.Component {
     if (this.state.poolSaved) return <Redirect to="/pooldetail" />;
 
     return (
-      <div>
+      <div className="createpool--container">
         <Header title="Create a Pool" />
         <div>Create Pool</div>
         <div>
@@ -78,7 +78,9 @@ class Createpool extends React.Component {
             <input id="pool-name" type="text" placeholder="Pool name" />
             <input id="match-week" type="text" placeholder="Starting week" />
 
-            <button type="submit">Submit Pool</button>
+            <button type="submit" className="submit-button">
+              Submit Pool
+            </button>
           </form>
         </div>
         {this.state.poolSaving ? <Loader /> : null}

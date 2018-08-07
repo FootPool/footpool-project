@@ -5,34 +5,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="/static/styles/loggedoutstyles.css">
   <title>Signup</title>
 </head>
 
-<body>
-  <header>
-    <button>
-      Return
-    </button>
-    <div>
-      Logo
-    </div>
+<body class='site--container'>
+  <header class="site--header">
+    <a href="/">
+      <h1 class="site--title">
+        <span>FootP</span>
+        <span class='site--title-emoji'>⚽⚽</span>
+        <span>l</span>
+      </h1>
+    </a>
+
+    <ul class="site--nav-links">
+      <li class="site--nav-link">
+        <a href="/signup" class='site--link-button link-active'>Sign Up</a>
+      </li>
+      <li class="site--nav-link">
+        <a href="/login" class="site--link-button">Login</a>
+      </li>
+    </ul>
   </header>
-  <div>
-    <h1>Sign Up</h1>
-  </div>
-  <div>
-    <form id="signup-form">
-      <input id="new-username" type="text" placeholder="Username" />
-      <input id="new-email" type="email" placeholder="Email Address" />
-      <input id="new-password" type="password" placeholder="Password" />
-      <button type="submit">Sign Up</button>
-    </form>
-    <p>Already have a profile?
-      <a href="/login">Login</a>
-    </p>
-    <p>
-      <a href="/reset">Forgotten details?</a>
-    </p>
+
+  <div class="site__form-container">
+    <div class="site__form--box">
+      <form id="signup-form" class="site__form">
+        <input id="new-username" type="text" placeholder="Username" class="site__form--input" />
+        <input id="new-email" type="email" placeholder="Email Address" class="site__form--input" />
+        <input id="new-password" type="password" placeholder="Password" class="site__form--input" />
+        <button type="submit" class="action-button">Sign Up</button>
+      </form>
+      <p>Already have a profile?
+        <a href="/login">Login</a>
+      </p>
+      {{!--
+      <p>
+        <a href="/reset">Forgotten details?</a>
+      </p> --}}
+    </div>
   </div>
   <script src="/static/signup.js"></script>
 </body>
