@@ -96,7 +96,6 @@ body p {
 
 .site--nav-link {
   float: right;
-  text-decoration: none;
 }
 
 .site--link-button:hover {
@@ -107,6 +106,7 @@ body p {
   display: block;
   padding: 8px;
   color: white;
+  text-decoration: none;
 }
 
 .site__subtitle {
@@ -120,7 +120,6 @@ body p {
 }
 
 .action-button {
-  justify-content: center;
   width: 100%;
   background-color: orange;
   padding: 15px;
@@ -173,11 +172,34 @@ body p {
 /* Login */
 /*  */
 .site__form--container {
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+
+.site__form--box {
+  justify-content: center;
+  margin: 8rem 1rem 1rem 1rem;
+  padding: 1rem;
+  background-color: rgba(202, 204, 206, 0.5);
 }
 
 .site__form {
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
   padding: 0.4rem 0 1rem 0;
-  background-color: rgba(202, 204, 206, 0.5);
+}
+
+/*  */
+/* Signup */
+/*  */
+.link-active {
+  color: orange;
+}
+
+.site__form--input {
+  border: none;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 0.25rem 0rem;
 }

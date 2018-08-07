@@ -20,13 +20,13 @@ class App extends React.Component {
     return (
       <div>
         <Switch>
-          <Route path="/choosepool" render={() => <Choosepool />} />
-          <Route path="/createpool" render={() => <Createpool />} />
-          <Route path="/joinpool" render={() => <Pool />} />
-          <Route path="/pooldetail" render={() => <Pooldetail />} />
-          <Route path="/profile" render={() => <Profile />} />
-          <Route path="/fixtures" render={() => <Fixtures />} />
-          <Route path="/placeyourguess" render={() => <PlaceYourGuess />} />
+          <Route path="/choosepool" component={Choosepool} />
+          <Route path="/createpool" component={Createpool} />
+          <Route path="/joinpool" component={Pool} />
+          <Route path="/pooldetail" component={Pooldetail} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/fixtures" component={Fixtures} />
+          <Route path="/placeyourguess" component={PlaceYourGuess} />
         </Switch>
         <Footer />
       </div>
