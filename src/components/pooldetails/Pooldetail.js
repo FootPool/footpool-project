@@ -25,33 +25,34 @@ class Pooldetail extends React.Component {
     this.validateUserInPool = this.validateUserInPool.bind(this);
   }
 
-  validateUserInPool(user, pool) {
-    fetch(`/isuserinpool/${user.id}/${pool.id}`, {
+  validateUserInPool(user, poolName) {
+    fetch(`/isuserinpool/${user.id}/${poolName}`, {
       method: "GET",
       headers: {
         "content-type": "application/json"
       }
-    }).then(response => {
-      if (response.status === 200) {
+    })
+      .then(response => response.json())
+      .then(data => {
         this.setState({
-          isValid: true
+          isValid: data.hasBets
         });
-      } else {
-        alert("You haven't made your guesses yet.");
-      }
-    });
+      });
   }
 
   componentDidMount() {
-    this.setState({
-      user: this.props.user,
-      pool: this.props.pool
-    });
+    this.setState(
+      {
+        user: this.props.user,
+        pool: this.props.pool
+      },
+      () => {
+        const user = this.state.user;
+        const pool = this.state.pool;
 
-    const user = this.state.user;
-    const pool = this.state.pool;
-
-    this.validateUserInPool(user, pool);
+        this.validateUserInPool(user, pool);
+      }
+    );
   }
 
   handleOpenModal() {
@@ -89,7 +90,9 @@ class Pooldetail extends React.Component {
       }
     }).then(response => {
       if (response.status === 200) {
-        console.log("Placing bets worked!");
+        this.setState({
+          isValid: true
+        });
       } else {
         alert("That hit the post (in a bad way).");
       }
@@ -103,7 +106,9 @@ class Pooldetail extends React.Component {
 
   render() {
     if (this.state.isValid) {
-      return <div>YOU HAVE PLACED YOUR BETS! 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥</div>;
+      return (
+        <div>YOU HAVE MADE YOUR GUESSES! 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥</div>
+      );
     } else {
       return (
         <div>

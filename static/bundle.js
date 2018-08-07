@@ -27379,44 +27379,44 @@ var Pooldetail = function (_React$Component) {
 
   _createClass(Pooldetail, [{
     key: "validateUserInPool",
-    value: function validateUserInPool(user, pool) {
+    value: function validateUserInPool(user, poolName) {
       var _this2 = this;
 
-      fetch("/isuserinpool/" + user.id + "/" + pool.id, {
+      fetch("/isuserinpool/" + user.id + "/" + poolName, {
         method: "GET",
         headers: {
           "content-type": "application/json"
         }
       }).then(function (response) {
-        if (response.status === 200) {
-          _this2.setState({
-            isValid: true
-          });
-        } else {
-          alert("You haven't made your guesses yet.");
-        }
+        return response.json();
+      }).then(function (data) {
+        _this2.setState({
+          isValid: data.hasBets
+        });
       });
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this3 = this;
+
       this.setState({
         user: this.props.user,
         pool: this.props.pool
+      }, function () {
+        var user = _this3.state.user;
+        var pool = _this3.state.pool;
+
+        _this3.validateUserInPool(user, pool);
       });
-
-      var user = this.state.user;
-      var pool = this.state.pool;
-
-      this.validateUserInPool(user, pool);
     }
   }, {
     key: "handleOpenModal",
     value: function handleOpenModal() {
-      var _this3 = this;
+      var _this4 = this;
 
       (0, _getFixtures2.default)(this.props.week).then(function (data) {
-        _this3.setState(function () {
+        _this4.setState(function () {
           return {
             fixtures: data
           };
@@ -27436,6 +27436,8 @@ var Pooldetail = function (_React$Component) {
   }, {
     key: "sendBetsToDb",
     value: function sendBetsToDb(pool, user, guesses) {
+      var _this5 = this;
+
       this.setState({ showModal: false });
 
       fetch("/placebet", {
@@ -27447,7 +27449,9 @@ var Pooldetail = function (_React$Component) {
         }
       }).then(function (response) {
         if (response.status === 200) {
-          console.log("Placing bets worked!");
+          _this5.setState({
+            isValid: true
+          });
         } else {
           alert("That hit the post (in a bad way).");
         }
@@ -27462,13 +27466,13 @@ var Pooldetail = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this6 = this;
 
       if (this.state.isValid) {
         return _react2.default.createElement(
           "div",
           null,
-          "YOU HAVE PLACED YOUR BETS! \uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25\uD83D\uDD25"
+          "YOU HAVE MADE YOUR GUESSES! \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25 \uD83D\uDD25"
         );
       } else {
         return _react2.default.createElement(
@@ -27520,7 +27524,7 @@ var Pooldetail = function (_React$Component) {
                   null,
                   this.state.fixtures && this.state.fixtures.matches ? this.state.fixtures.matches.map(function (match, index) {
                     var name = "match" + index;
-                    var selectedMatchValue = _this4.state.guesses[match.id];
+                    var selectedMatchValue = _this6.state.guesses[match.id];
                     return _react2.default.createElement(
                       "form",
                       { key: match.id, action: "" },
@@ -27533,7 +27537,7 @@ var Pooldetail = function (_React$Component) {
                             className: "radiobtn",
                             htmlFor: match.id + "-hw",
                             onClick: function onClick() {
-                              return _this4.handleSelect(match.id, "HOME_TEAM");
+                              return _this6.handleSelect(match.id, "HOME_TEAM");
                             }
                           },
                           _react2.default.createElement("input", {
@@ -27556,7 +27560,7 @@ var Pooldetail = function (_React$Component) {
                             className: "radiobtn",
                             htmlFor: match.id + "-dr",
                             onClick: function onClick() {
-                              return _this4.handleSelect(match.id, "DRAW");
+                              return _this6.handleSelect(match.id, "DRAW");
                             }
                           },
                           _react2.default.createElement("input", {
@@ -27579,7 +27583,7 @@ var Pooldetail = function (_React$Component) {
                             className: "radiobtn",
                             htmlFor: match.id + "-aw",
                             onClick: function onClick() {
-                              return _this4.handleSelect(match.id, "AWAY_TEAM");
+                              return _this6.handleSelect(match.id, "AWAY_TEAM");
                             }
                           },
                           _react2.default.createElement("input", {

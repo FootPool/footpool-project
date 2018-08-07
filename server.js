@@ -222,8 +222,6 @@ app.post("/pool", function(req, res) {
 app.post("/placebet", function(req, res) {
   const { user, pool, guesses } = req.body;
 
-  console.log(pool, user, guesses);
-
   db.one(
     `SELECT id FROM pool
     WHERE poolname = $1`,
@@ -251,20 +249,21 @@ app.post("/placebet", function(req, res) {
 
 // VALIDATE USER IN POOL
 
-app.get("/isuserinpool/:userId/:poolId", function(req, res) {
+app.get("/isuserinpool/:userId/:poolName", function(req, res) {
   const userId = req.params.userId;
-  const poolId = req.params.poolId;
+  const poolName = req.params.poolName;
 
-  db.any(
-    `SELECT count(*) FROM bet
-      WHERE user_id = $1
-      AND pool_id = $2`,
-    [userId, poolId]
+  db.one(
+    `SELECT count(*) FROM bet, pool
+      WHERE bet.user_id = $1
+      AND bet.pool_id = pool.id
+      AND pool.poolName = $2`,
+    [userId, poolName]
   )
     .then(data => {
-      data.length === 10
-        ? res.status(200).end()
-        : res.json({ error: error.message });
+      res.json({
+        hasBets: data.count !== "0"
+      });
     })
     .catch(error => {
       res.json({ error: error.message });
