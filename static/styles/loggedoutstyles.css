@@ -1,0 +1,183 @@
+/*  */
+/*  */
+/* GLOBAL STYLE */
+body {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body h1 {
+  font-family: "Monoton", cursive;
+  font-size: 2.5rem;
+}
+
+body h2,
+h3,
+h4,
+h5 {
+  font-family: "Open Sans", sans-serif;
+}
+
+body p {
+  font-family: "Roboto", sans-serif;
+}
+
+body h2 {
+  font-size: 2rem;
+}
+
+body h3 {
+  font-size: 1.7rem;
+}
+
+body h4 {
+  font-size: 1.5rem;
+}
+
+body h5 {
+  font-size: 1.3rem;
+}
+
+body p {
+  font-size: 1rem;
+}
+
+/*  */
+/*  */
+/* PAGE SPECIFIC */
+.site--container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  background-image: url(../images/stadium-background.jpg);
+  background-size: 100% 100%;
+}
+
+/*  */
+/* HOMEPAGE */
+/*  */
+.site--header {
+  display: inline-block;
+  flex-direction: row;
+  width: 100%;
+  background-color: rgba(30, 144, 255, 0.5);
+}
+
+.site--title-list {
+  float: left;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.site--title {
+  font-size: 1.2rem;
+  font-family: sans-serif;
+  color: white;
+  padding: 5px;
+  text-transform: uppercase;
+}
+
+.site--title span {
+  float: left;
+}
+
+.site--title-emoji {
+  align-self: center;
+  font-size: 0.9rem;
+}
+
+.site--nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site--nav-link {
+  float: right;
+  text-decoration: none;
+}
+
+.site--link-button:hover {
+  color: orange;
+}
+
+.site--link-button {
+  display: block;
+  padding: 8px;
+  color: white;
+}
+
+.site__subtitle {
+  justify-content: center;
+  padding: 3rem 3rem 6rem 3rem;
+}
+
+.site__subtitle--text {
+  text-align: center;
+  color: white;
+}
+
+.action-button {
+  justify-content: center;
+  width: 100%;
+  background-color: orange;
+  padding: 15px;
+  border: none;
+  border-radius: 15px;
+  font-size: 1rem;
+}
+
+.action-button a {
+  color: black;
+  text-decoration: none;
+}
+
+.site__fixture-list--container {
+  padding: 10px;
+}
+
+.site__fixture-list {
+  justify-content: center;
+  padding: 0.4rem 0 1rem 0;
+  background-color: rgba(202, 204, 206, 0.5);
+}
+
+.site__fixture-list--title {
+  text-align: center;
+}
+
+.site__fixture-list--fixtures {
+  text-align: center;
+}
+
+.site__more-info--container {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: white;
+}
+
+.site__footer--container {
+  width: 100%;
+  margin: 0;
+  background-color: dodgerblue;
+}
+
+.site__footer--credit {
+  text-align: center;
+  color: white;
+}
+
+/*  */
+/* Login */
+/*  */
+.site__form--container {
+  padding: 10px;
+}
+
+.site__form {
+  justify-content: center;
+  padding: 0.4rem 0 1rem 0;
+  background-color: rgba(202, 204, 206, 0.5);
+}

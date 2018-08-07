@@ -15,20 +15,24 @@ class Choosepool extends React.Component {
         <div>
           <h3 className="choosepool--title">Your pools</h3>
 
-          <div className="choosepool--fixture-list">
-            <p>Pool 1</p>
-            <p>Pool 2</p>
-            <p>Pool 3</p>
-            <p>Pool 4</p>
-            <p>Pool 5</p>
+          <div className="choosepool--pool-list">
+            <p className="choosepool--pool-item">Pool 1</p>
+            <p className="choosepool--pool-item">Pool 2</p>
+            <p className="choosepool--pool-item">Pool 3</p>
+            <p className="choosepool--pool-item">Pool 4</p>
+            <p className="choosepool--pool-item">Pool 5</p>
           </div>
 
-          <div>
+          <div className="choosepool--option-buttons-container">
             <Link to="/createpool">
-              <button type="button">Create Pool</button>
+              <button type="button" className="choosepool--option-button">
+                Create Pool
+              </button>
             </Link>
             <Link to="/joinpool">
-              <button type="button">Join Pool</button>
+              <button type="button" className="choosepool--option-button">
+                Join Pool
+              </button>
             </Link>
           </div>
         </div>

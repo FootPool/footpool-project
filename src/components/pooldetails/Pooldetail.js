@@ -47,7 +47,7 @@ class Pooldetail extends React.Component {
   render() {
     console.log(this.state.guesses);
     return (
-      <div>
+      <div className="pooldetail--container">
       <Header title="Pool Details" />
       <div>
       <div>Pool Members</div>
