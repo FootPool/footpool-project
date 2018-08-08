@@ -107,15 +107,17 @@ class Pooldetail extends React.Component {
   render() {
     if (this.state.isValid) {
       return (
+        // Liveresults.js
         <div>YOU HAVE MADE YOUR GUESSES! 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥</div>
       );
     } else {
       return (
+        // Placebets.js
         <div>
           <Header title="Pool Details" />
           <div>
-            <div>Pool Members</div>
-            <div>Score</div>
+            <h2>Pool Members</h2>
+            <p>Score</p>
             <div>
               <form>
                 <div>
@@ -127,78 +129,76 @@ class Pooldetail extends React.Component {
                 isOpen={this.state.showModal}
                 contentLabel="Guesses Submitted Successfully"
               >
-                <div>
+                <form>
                   {this.state.fixtures && this.state.fixtures.matches
                     ? this.state.fixtures.matches.map((match, index) => {
                         const name = "match" + index;
                         const selectedMatchValue = this.state.guesses[match.id];
                         return (
-                          <form key={match.id} action="">
-                            <div className="row">
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-hw"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "HOME_TEAM")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-hw"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="HOME_TEAM"
-                                  name={name}
-                                  checked={selectedMatchValue === "HOME_TEAM"}
-                                />
-                                <span className="radiobtn__text">
-                                  {match.homeTeam.name}
-                                </span>
-                              </label>
+                          <div key={match.id} className="row">
+                            <label
+                              className="radiobtn"
+                              htmlFor={match.id + "-hw"}
+                              onClick={() =>
+                                this.handleSelect(match.id, "HOME_TEAM")
+                              }
+                            >
+                              <input
+                                id={match.id + "-hw"}
+                                className="radiobtn__input"
+                                type="radio"
+                                value="HOME_TEAM"
+                                name={name}
+                                checked={selectedMatchValue === "HOME_TEAM"}
+                              />
+                              <span className="radiobtn__text">
+                                {match.homeTeam.name}
+                              </span>
+                            </label>
 
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-dr"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "DRAW")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-dr"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="DRAW"
-                                  name={name}
-                                  checked={selectedMatchValue === "DRAW"}
-                                />
-                                <span className="radiobtn__text">Draw</span>
-                              </label>
+                            <label
+                              className="radiobtn"
+                              htmlFor={match.id + "-dr"}
+                              onClick={() =>
+                                this.handleSelect(match.id, "DRAW")
+                              }
+                            >
+                              <input
+                                id={match.id + "-dr"}
+                                className="radiobtn__input"
+                                type="radio"
+                                value="DRAW"
+                                name={name}
+                                checked={selectedMatchValue === "DRAW"}
+                              />
+                              <span className="radiobtn__text">Draw</span>
+                            </label>
 
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-aw"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "AWAY_TEAM")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-aw"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="AWAY_TEAM"
-                                  name={name}
-                                  checked={selectedMatchValue === "AWAY_TEAM"}
-                                />
-                                <span className="radiobtn__text">
-                                  {match.awayTeam.name}
-                                </span>
-                              </label>
-                            </div>
-                          </form>
+                            <label
+                              className="radiobtn"
+                              htmlFor={match.id + "-aw"}
+                              onClick={() =>
+                                this.handleSelect(match.id, "AWAY_TEAM")
+                              }
+                            >
+                              <input
+                                id={match.id + "-aw"}
+                                className="radiobtn__input"
+                                type="radio"
+                                value="AWAY_TEAM"
+                                name={name}
+                                checked={selectedMatchValue === "AWAY_TEAM"}
+                              />
+                              <span className="radiobtn__text">
+                                {match.awayTeam.name}
+                              </span>
+                            </label>
+                          </div>
                         );
                       })
                     : null}
-                </div>
-                <button onClick={this.handleCloseModal}>Play</button>
+                  <button onClick={this.handleCloseModal}>Play</button>
+                </form>
               </ReactModal>
             </div>
           </div>
