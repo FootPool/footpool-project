@@ -3,16 +3,21 @@ import Header from "../header/Header";
 import { Link } from "react-router-dom";
 
 class Choosepool extends React.Component {
+  // state = {
+  //   pools: []
+  // };
   constructor() {
     super();
 
     this.state = {
       pools: []
     };
+
+    this.joinPool = this.joinPool.bind(this);
   }
 
   componentDidMount() {
-    fetch("/displaypools", {
+    fetch("/api/displaypools", {
       method: "GET",
       headers: {
         "content-type": "application/json"
@@ -26,6 +31,12 @@ class Choosepool extends React.Component {
       });
   }
 
+  joinPool = (poolId, poolName, week) => () => {
+    this.props.joinPoolDetails(poolId, poolName, week);
+
+    window.location.pathname = "/pooldetail";
+  };
+
   render() {
     return (
       <div className="choosepool--container">
@@ -37,9 +48,17 @@ class Choosepool extends React.Component {
           <div className="choosepool--pool-list">
             {this.state.pools.map(pool => {
               return (
-                <div className="choosepool--pool-item">
-                  <h3 key={pool.id}>{pool.poolname}</h3>
-                  <button>JOIN POOL</button>
+                <div
+                  key={pool.id}
+                  week={pool.week}
+                  className="choosepool--pool-item"
+                >
+                  <h3>{pool.poolname}</h3>
+                  <button
+                    onClick={this.joinPool(pool.id, pool.poolname, pool.week)}
+                  >
+                    JOIN POOL
+                  </button>
                 </div>
               );
             })}
@@ -51,11 +70,11 @@ class Choosepool extends React.Component {
                 Create Pool
               </button>
             </Link>
-            <Link to="/joinpool">
+            {/* <Link to="/joinpool">
               <button type="button" className="choosepool--option-button">
                 Join Pool
-              </button>
-            </Link>
+              </button> 
+            </Link> */}
           </div>
         </div>
       </div>

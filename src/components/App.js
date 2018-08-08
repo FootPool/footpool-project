@@ -19,13 +19,28 @@ class App extends React.Component {
       pool: "",
       week: "",
       poolId: "",
-      user: window.user
+      user: null
     };
 
-    this.receivePoolDetails = this.receivePoolDetails.bind(this);
+    this.receiveNewPoolDetails = this.receiveNewPoolDetails.bind(this);
+    this.joinPoolDetails = this.joinPoolDetails.bind(this);
   }
 
-  receivePoolDetails(poolId, pool, week) {
+  componentDidMount() {
+    const el = document.querySelector("#user");
+    const { user } = JSON.parse(el.textContent);
+    this.setState({ user });
+  }
+
+  receiveNewPoolDetails(poolId, pool, week) {
+    this.setState({
+      poolId,
+      pool,
+      week
+    });
+  }
+
+  joinPoolDetails(poolId, pool, week) {
     this.setState({
       poolId,
       pool,
@@ -37,11 +52,14 @@ class App extends React.Component {
     return (
       <div>
         <Switch>
-          <Route path="/choosepool" render={() => <Choosepool />} />
+          <Route
+            path="/choosepool"
+            render={() => <Choosepool joinPoolDetails={this.joinPoolDetails} />}
+          />
           <Route
             path="/createpool"
             render={() => (
-              <Createpool receivePoolDetails={this.receivePoolDetails} />
+              <Createpool receiveNewPoolDetails={this.receiveNewPoolDetails} />
             )}
           />
           <Route path="/joinpool" render={() => <Pool />} />
