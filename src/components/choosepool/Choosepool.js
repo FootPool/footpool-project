@@ -11,6 +11,12 @@ class Choosepool extends React.Component {
     this.props.joinPool(pool);
   }
 
+  joinPool = (poolId, poolName, week) => () => {
+    this.props.joinPoolDetails(poolId, poolName, week);
+
+    window.location.pathname = "/pooldetail";
+  };
+
   render() {
     if (this.props.selectedPoolId) {
       return <Redirect to={{ pathname: "/pooldetail" }} />;

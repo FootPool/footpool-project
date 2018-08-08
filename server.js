@@ -230,6 +230,8 @@ app.get("/displaypools", function(req, res) {
     .catch(error => res.json({ error: error.message }));
 });
 
+app.use("/api/", apiRouter);
+
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {
   const user = req.user ? req.user : { id: null };
