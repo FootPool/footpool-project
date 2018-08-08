@@ -220,6 +220,16 @@ app.post("/admin", function(req, res) {
 app.use("/api", apiRouter(db));
 app.use("/", indexRouter);
 
+// GET POOLS TO DISPLAY TO USER
+
+app.get("/displaypools", function(req, res) {
+  db.any(`SELECT * FROM pool`)
+    .then(data => {
+      res.json(data);
+    })
+    .catch(error => res.json({ error: error.message }));
+});
+
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {
   const user = req.user ? req.user : { id: null };
