@@ -290,6 +290,16 @@ app.get("/isuserinpool/:userId/:poolName", function(req, res) {
     });
 });
 
+// GET POOLS TO DISPLAY TO USER
+
+app.get("/displaypools", function(req, res) {
+  db.any(`SELECT * FROM pool`)
+    .then(data => {
+      res.json(data);
+    })
+    .catch(error => res.json({ error: error.message }));
+});
+
 // PROTECTED ROUTES
 
 app.get("/*", isLoggedIn, function(req, res) {
