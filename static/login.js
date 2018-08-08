@@ -5,7 +5,7 @@ logIn.addEventListener("submit", function(event) {
   const username = document.querySelector("#username").value;
   const password = document.querySelector("#password").value;
 
-  fetch("/login", {
+  fetch("/api/login", {
     method: "POST",
     body: JSON.stringify({ username, password }),
     credentials: "same-origin",

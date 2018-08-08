@@ -18,7 +18,7 @@ class Createpool extends React.Component {
   }
 
   poolDetailsReceiver(poolId, pool, week) {
-    this.props.receivePoolDetails(poolId, pool, week);
+    this.props.receiveNewPoolDetails(poolId, pool, week);
   }
 
   validatePool(event) {
@@ -37,7 +37,7 @@ class Createpool extends React.Component {
   addNewPool(poolName, matchWeek) {
     this.setState({ poolSaving: true });
 
-    fetch("/pool", {
+    fetch("/api/pool", {
       method: "POST",
       body: JSON.stringify({ poolName, matchWeek }),
       credentials: "same-origin",

@@ -10,10 +10,11 @@
   <div id="root">
 
   </div>
-  <script type="text/javascript">
-    window.user = {
-      id: {{ user.id }}
-    };
+  <script>
+    window.user ={{{ user.id }}}
+  </script>
+  <script id="user" type="application/json">
+    {{{ json }}}
   </script>
   <script src="/static/bundle.js"></script>
 </body>
