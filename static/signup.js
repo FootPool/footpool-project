@@ -6,7 +6,7 @@ signUp.addEventListener("submit", function(event) {
   const newPassword = document.querySelector("#new-password").value;
   const newEmail = document.querySelector("#new-email").value;
 
-  fetch("/signup", {
+  fetch("/api/signup", {
     method: "POST",
     body: JSON.stringify({
       newUsername,

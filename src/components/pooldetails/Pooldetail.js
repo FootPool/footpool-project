@@ -26,7 +26,7 @@ class Pooldetail extends React.Component {
   }
 
   validateUserInPool(user, poolName) {
-    fetch(`/isuserinpool/${user.id}/${poolName}`, {
+    fetch(`/api/validate/${user.id}/${poolName}`, {
       method: "GET",
       headers: {
         "content-type": "application/json"
@@ -44,7 +44,8 @@ class Pooldetail extends React.Component {
     this.setState(
       {
         user: this.props.user,
-        pool: this.props.pool
+        pool: this.props.pool,
+        poolId: this.props.poolId
       },
       () => {
         const user = this.state.user;
@@ -81,7 +82,7 @@ class Pooldetail extends React.Component {
   sendBetsToDb(pool, user, guesses) {
     this.setState({ showModal: false });
 
-    fetch("/placebet", {
+    fetch("/api/placebet", {
       method: "POST",
       body: JSON.stringify({ user, pool, guesses }),
       credentials: "same-origin",

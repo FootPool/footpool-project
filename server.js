@@ -8,6 +8,11 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({ path: "./.envrc" });
 const fetch = require("node-fetch");
+const io = require("socket.io");
+
+const indexRouter = require("./routes/index");
+const apiRouter = require("./routes/api");
+
 const app = express();
 // const io = require("socket.io");
 const socket = require("socket.io");
@@ -198,13 +203,7 @@ app.get("/signup", function(req, res) {
   res.render("signup");
 });
 
-app.get("/login", function(req, res) {
-  res.render("login");
-});
-
-app.get("/reset", function(req, res) {
-  res.render("reset");
-});
+app.use("/", indexRouter);
 
 // AUTHENTICATE LOG IN
 passport.use(
@@ -396,9 +395,13 @@ app.get("/displaypools", function(req, res) {
     .catch(error => res.json({ error: error.message }));
 });
 
+app.use("/api/", apiRouter);
+
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {
-  res.render("index", { user: req.user });
+  const user = req.user ? { user: req.user } : { user: { id: null } };
+  const json = JSON.stringify(user);
+  res.render("index", { user, json });
 });
 
 server.listen(8080, function() {
