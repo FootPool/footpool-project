@@ -5,6 +5,25 @@ import { Link } from "react-router-dom";
 class Choosepool extends React.Component {
   constructor() {
     super();
+
+    this.state = {
+      pools: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("/displaypools", {
+      method: "GET",
+      headers: {
+        "content-type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          pools: data
+        });
+      });
   }
 
   render() {
@@ -16,11 +35,14 @@ class Choosepool extends React.Component {
           <h3 className="choosepool--title">Your pools</h3>
 
           <div className="choosepool--pool-list">
-            <p className="choosepool--pool-item">Pool 1</p>
-            <p className="choosepool--pool-item">Pool 2</p>
-            <p className="choosepool--pool-item">Pool 3</p>
-            <p className="choosepool--pool-item">Pool 4</p>
-            <p className="choosepool--pool-item">Pool 5</p>
+            {this.state.pools.map(pool => {
+              return (
+                <div className="choosepool--pool-item">
+                  <h3 key={pool.id}>{pool.poolname}</h3>
+                  <button>JOIN POOL</button>
+                </div>
+              );
+            })}
           </div>
 
           <div className="choosepool--option-buttons-container">
