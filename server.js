@@ -203,8 +203,6 @@ app.get("/signup", function(req, res) {
   res.render("signup");
 });
 
-app.use("/", indexRouter);
-
 // AUTHENTICATE LOG IN
 passport.use(
   new LocalStrategy(function(username, password, done) {
@@ -395,7 +393,8 @@ app.get("/displaypools", function(req, res) {
     .catch(error => res.json({ error: error.message }));
 });
 
-app.use("/api/", apiRouter);
+app.use("/api", apiRouter(db));
+app.use("/", indexRouter);
 
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {

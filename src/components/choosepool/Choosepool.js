@@ -1,11 +1,8 @@
 import React from "react";
 import Header from "../header/Header";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 class Choosepool extends React.Component {
-  // state = {
-  //   pools: []
-  // };
   constructor() {
     super();
 
@@ -32,12 +29,21 @@ class Choosepool extends React.Component {
   }
 
   joinPool = (poolId, poolName, week) => () => {
-    this.props.joinPoolDetails(poolId, poolName, week);
-
-    window.location.pathname = "/pooldetail";
+    this.setState({ poolId, poolName, week, poolSelected: true });
   };
 
   render() {
+    if (this.state.poolSelected) {
+      return (
+        <Redirect
+          to={{
+            pathname: "/pooldetail",
+            state: this.state
+          }}
+        />
+      );
+    }
+
     return (
       <div className="choosepool--container">
         <Header title="Choose Your Pool" />
@@ -55,7 +61,12 @@ class Choosepool extends React.Component {
                 >
                   <h3>{pool.poolname}</h3>
                   <button
-                    onClick={this.joinPool(pool.id, pool.poolname, pool.week)}
+                    type="button"
+                    onClick={this.joinPool(
+                      pool.id,
+                      pool.poolname,
+                      pool.match_week
+                    )}
                   >
                     JOIN POOL
                   </button>
@@ -70,11 +81,6 @@ class Choosepool extends React.Component {
                 Create Pool
               </button>
             </Link>
-            {/* <Link to="/joinpool">
-              <button type="button" className="choosepool--option-button">
-                Join Pool
-              </button> 
-            </Link> */}
           </div>
         </div>
       </div>
