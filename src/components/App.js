@@ -19,7 +19,7 @@ class App extends React.Component {
       pool: "",
       week: "",
       poolId: "",
-      user: null
+      user: {}
     };
 
     this.receiveNewPoolDetails = this.receiveNewPoolDetails.bind(this);
@@ -41,6 +41,8 @@ class App extends React.Component {
   }
 
   joinPoolDetails(poolId, pool, week) {
+    console.log("App.joinPoolDetails", { poolId, pool, week });
+
     this.setState({
       poolId,
       pool,
@@ -62,21 +64,11 @@ class App extends React.Component {
               <Createpool receiveNewPoolDetails={this.receiveNewPoolDetails} />
             )}
           />
-          <Route path="/joinpool" render={() => <Pool />} />
-          <Route
-            path="/pooldetail"
-            render={() => (
-              <Pooldetail
-                pool={this.state.pool}
-                week={this.state.week}
-                user={this.state.user}
-                poolId={this.state.poolId}
-              />
-            )}
-          />
-          <Route path="/profile" render={() => <Profile />} />
-          <Route path="/fixtures" render={() => <Fixtures />} />
-          <Route path="/placeyourguess" render={() => <PlaceYourGuess />} />
+          <Route path="/joinpool" component={Pool} />
+          <Route path="/pooldetail" component={Pooldetail} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/fixtures" component={Fixtures} />
+          <Route path="/placeyourguess" component={PlaceYourGuess} />
         </Switch>
         <Footer />
       </div>

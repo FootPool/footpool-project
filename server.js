@@ -189,10 +189,6 @@ passport.deserializeUser(function(id, done) {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// LANDING PAGES
-
-app.use("/", indexRouter);
-
 // AUTHENTICATE LOG IN
 passport.use(
   new LocalStrategy(function(username, password, done) {
@@ -220,8 +216,9 @@ app.post("/admin", function(req, res) {
   // console.log(scores);
 });
 
-// API
-app.use("/api/", apiRouter);
+// ROUTES
+app.use("/api", apiRouter(db));
+app.use("/", indexRouter);
 
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {
