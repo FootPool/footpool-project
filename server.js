@@ -94,16 +94,10 @@ passport.deserializeUser(function(id, done) {
 });
 
 // INITIALISE PASSPORT AND SESSION
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-// LANDING PAGES
-
-app.use("/", indexRouter);
-
 // AUTHENTICATE LOG IN
-
 passport.use(
   new LocalStrategy(function(username, password, done) {
     getUserByUsername(username)
@@ -119,12 +113,11 @@ passport.use(
   })
 );
 
-// API
-
-app.use("/api/", apiRouter);
+// ROUTES
+app.use("/api", apiRouter(db));
+app.use("/", indexRouter);
 
 // PROTECTED ROUTES
-
 app.get("/*", isLoggedIn, function(req, res) {
   const user = req.user ? { user: req.user } : { user: { id: null } };
   const json = JSON.stringify(user);

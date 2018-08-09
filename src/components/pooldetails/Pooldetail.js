@@ -3,18 +3,18 @@ import ReactModal from "react-modal";
 import Header from "../header/Header";
 import getFixtures from "../../services/getFixtures";
 
-const DRAW = 0;
-
 class Pooldetail extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
     this.state = {
       showModal: false,
       fixtures: undefined,
       guesses: {},
-      user: "",
+      user: {},
       pool: "",
       poolId: "",
+      week: "",
       isValid: false
     };
 
@@ -25,8 +25,10 @@ class Pooldetail extends React.Component {
     this.validateUserInPool = this.validateUserInPool.bind(this);
   }
 
-  validateUserInPool(user, poolName) {
-    fetch(`/api/validate/${user.id}/${poolName}`, {
+  validateUserInPool(userId, poolName) {
+    if (!userId) return;
+
+    fetch(`/api/validate/${userId}/${poolName}`, {
       method: "GET",
       headers: {
         "content-type": "application/json"
@@ -41,23 +43,13 @@ class Pooldetail extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(
-      {
-        user: this.props.user,
-        pool: this.props.pool,
-        poolId: this.props.poolId
-      },
-      () => {
-        const user = this.state.user;
-        const pool = this.state.pool;
-
-        this.validateUserInPool(user, pool);
-      }
-    );
+    this.validateUserInPool(user.id, pool);
   }
 
   handleOpenModal() {
-    getFixtures(this.props.week).then(data => {
+    const { state } = this.props.location;
+
+    getFixtures(state.week).then(data => {
       this.setState(() => {
         return {
           fixtures: data
@@ -106,6 +98,8 @@ class Pooldetail extends React.Component {
   }
 
   render() {
+    console.log("Pooldetail", this.props);
+
     if (this.state.isValid) {
       return (
         // Liveresults.js
@@ -120,12 +114,9 @@ class Pooldetail extends React.Component {
             <h2>Pool Members</h2>
             <p>Score</p>
             <div>
-              <form>
-                <div>
-                  <p>Member 1</p>
-                </div>
-              </form>
-              <button onClick={this.handleOpenModal}>Play Now!</button>
+              <button type="button" onClick={this.handleOpenModal}>
+                Play Now!
+              </button>
               <ReactModal
                 isOpen={this.state.showModal}
                 contentLabel="Guesses Submitted Successfully"
