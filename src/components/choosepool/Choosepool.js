@@ -12,9 +12,7 @@ class Choosepool extends React.Component {
   }
 
   joinPool = (poolId, poolName, week) => () => {
-    this.props.joinPoolDetails(poolId, poolName, week);
-
-    window.location.pathname = "/pooldetail";
+    this.setState({ poolId, poolName, week, poolSelected: true });
   };
 
   render() {
