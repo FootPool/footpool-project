@@ -119,7 +119,7 @@ app.use("/", indexRouter);
 
 // PROTECTED ROUTES
 app.get("/*", isLoggedIn, function(req, res) {
-  const user = req.user ? { user: req.user } : { user: { id: null } };
+  const user = req.user ? req.user : { id: null };
   const json = JSON.stringify(user);
   res.render("index", { user, json });
 });

@@ -1,6 +1,7 @@
 import React from "react";
 import io from "socket.io-client";
 import Header from "../header/Header";
+import Fixture from "./Fixture";
 
 class Fixtures extends React.Component {
   constructor() {
@@ -14,33 +15,24 @@ class Fixtures extends React.Component {
   }
 
   componentDidMount() {
-    fetch(
-      "http://api.football-data.org/v2/competitions/2021/matches?matchday=1",
-      {
-        method: "GET",
-        headers: {
-          "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
-        }
-      }
-    )
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
+    this.props.getFixtures();
   }
 
   render() {
+    console.log(this.props.matches);
     return (
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
-          <h2>Fixture List</h2>
-
-          <p>Team A vs Team B</p>
-          <p>Team C vs Team D</p>
-          <p>Team E vs Team F</p>
-          <p>Team G vs Team H</p>
-          <p>Team I vs Team J</p>
-          <p>Team K vs Team L</p>
+          {this.props.matches.map(match => {
+            return (
+              <Fixture
+                key={match.id}
+                awayTeam={match.awayTeam.name}
+                homeTeam={match.homeTeam.name}
+              />
+            );
+          })}
         </div>
       </div>
     );
