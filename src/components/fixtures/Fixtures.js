@@ -17,7 +17,6 @@ class Fixtures extends React.Component {
   }
 
   render() {
-    console.log(this.props.matches);
     return (
       <div className="fixtures--container">
         <Header title="Fixtures" />
