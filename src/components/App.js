@@ -3,7 +3,7 @@ import ProfileContainer from "../containers/ProfileContainer";
 import Footer from "./footer/Footer";
 import FixturesContainer from "../containers/FixturesContainer";
 import ChoosePoolContainer from "../containers/ChoosePoolContainer";
-import Createpool from "./createpool/Createpool";
+import CreatePoolContainer from "../containers/CreatePoolContainer";
 import PlaceYourGuess from "./placeyourguess/PlaceYourGuess";
 import Pool from "./pool/Pool";
 import PoolDetailContainer from "../containers/PoolDetailContainer";
@@ -14,16 +14,6 @@ import "../../static/styles/style.scss";
 class App extends React.Component {
   constructor() {
     super();
-
-    this.state = {
-      pool: "",
-      week: "",
-      poolId: "",
-      user: {}
-    };
-
-    this.receiveNewPoolDetails = this.receiveNewPoolDetails.bind(this);
-    this.joinPoolDetails = this.joinPoolDetails.bind(this);
   }
 
   componentDidMount() {
@@ -32,38 +22,12 @@ class App extends React.Component {
     this.setState({ user });
   }
 
-  receiveNewPoolDetails(poolId, pool, week) {
-    this.setState({
-      poolId,
-      pool,
-      week
-    });
-  }
-
-  joinPoolDetails(poolId, pool, week) {
-    this.setState({
-      poolId,
-      pool,
-      week
-    });
-  }
-
   render() {
     return (
       <div>
         <Switch>
-          <Route
-            path="/choosepool"
-            render={() => (
-              <ChoosePoolContainer joinPoolDetails={this.joinPoolDetails} />
-            )}
-          />
-          <Route
-            path="/createpool"
-            render={() => (
-              <Createpool receiveNewPoolDetails={this.receiveNewPoolDetails} />
-            )}
-          />
+          <Route path="/choosepool" component={ChoosePoolContainer} />
+          <Route path="/createpool" component={CreatePoolContainer} />
           <Route path="/joinpool" component={Pool} />
           <Route path="/pooldetail" component={PoolDetailContainer} />
           <Route path="/profile" component={ProfileContainer} />

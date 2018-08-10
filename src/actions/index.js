@@ -113,3 +113,34 @@ export function updateComponentAfterPlacingBets() {
     isValid: true
   };
 }
+
+export const addNewPool = (poolName, matchWeek) => dispatch => {
+  fetch("/api/pool", {
+    method: "POST",
+    body: JSON.stringify({ poolName, matchWeek }),
+    credentials: "same-origin",
+    headers: {
+      "content-type": "application/json"
+    }
+  })
+    .then(response => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        alert("Sorry, your pool was offside. Try again.");
+      }
+    })
+    .then(data => {
+      dispatch(updateComponentAfterCreatingPool(data));
+    })
+    .catch(error => {
+      alert("Sorry, your pool was offside. Try again.");
+    });
+};
+
+export function updateComponentAfterCreatingPool(data) {
+  return {
+    type: "UPDATE_COMPONENT_AFTER_POOL_CREATED",
+    poolId: data.poolId
+  };
+}
