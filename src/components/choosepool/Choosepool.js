@@ -11,9 +11,9 @@ class Choosepool extends React.Component {
     this.props.joinPool(pool);
   }
 
-  joinPool = (poolId, poolName, week) => () => {
-    this.setState({ poolId, poolName, week, poolSelected: true });
-  };
+  selectPool(pool) {
+    this.props.joinPool(pool);
+  }
 
   render() {
     if (this.props.selectedPoolId) {
