@@ -30,35 +30,30 @@ class Fixtures extends React.Component {
     //   socket.emit("join", "hello world from client");
     // });
     socket.on("matchDetails", data => {
-      this.setState(
-        {
-          fixtures: data
-        },
-        () => console.log(data)
-      );
+      console.log(data);
     });
   }
 
   render() {
-    if (this.state.fixtures) {
-      return (
-        <div className="fixtures--container">
-          <Header title="Fixtures" />
-          <div className="fixtures--fixture-list">
-            <h2>Fixture List</h2>
-            {this.state.fixtures.map(
-              ({ home_team, away_team, home_score, away_score, status }) => (
-                <div>
-                  {home_team} : {home_score} - {away_score} : {away_team} -
-                  {status}
-                </div>
-              )
-            )}
-          </div>
+    // if (this.state.fixtures) {
+    return (
+      <div className="fixtures--container">
+        <Header title="Fixtures" />
+        <div className="fixtures--fixture-list">
+          <h2>Fixture List</h2>
+          {/* {this.state.fixtures.map(
+            ({ home_team, away_team, home_score, away_score, status }) => (
+              <div>
+                {home_team} : {home_score} - {away_score} : {away_team} -
+                {status}
+              </div>
+            )
+          )} */}
         </div>
-      );
-    }
-    return <div>loading</div>;
+      </div>
+    );
+    // }
+    // return <div>loading</div>;
   }
 }
 

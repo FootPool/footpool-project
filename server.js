@@ -48,148 +48,213 @@ app.use(
 
 //// generate Function for virtual scores
 
-function doEverything(gameId) {
-  let counter = 0;
-  let homeTeam = 0;
-  let awayTeam = 0;
+// function doEverything(gameId) {
+//   let counter = 0;
+//   let homeTeam = 0;
+//   let awayTeam = 0;
 
-  function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+//   function randomInt(min, max) {
+//     return Math.floor(Math.random() * (max - min)) + min;
+//   }
 
-  function sendResult(matchId) {
-    if (homeTeam > awayTeam) {
-      db.none(
-        `UPDATE game
-       SET winner = 'HOME_TEAM' WHERE match_id = $1`,
-        [matchId]
-      );
-    } else if (awayTeam > homeTeam) {
-      db.none(
-        `UPDATE game
-       SET winner = 'AWAY_TEAM' WHERE match_id = $1`,
-        [matchId]
-      );
-    } else {
-      db.none(
-        `UPDATE game
-       SET winner = 'DRAW' WHERE match_id = $1`,
-        [matchId]
-      );
-    }
-  }
+//   function sendResult(matchId) {
+//     if (homeTeam > awayTeam) {
+//       db.none(
+//         `UPDATE game
+//        SET winner = 'HOME_TEAM' WHERE match_id = $1`,
+//         [matchId]
+//       );
+//     } else if (awayTeam > homeTeam) {
+//       db.none(
+//         `UPDATE game
+//        SET winner = 'AWAY_TEAM' WHERE match_id = $1`,
+//         [matchId]
+//       );
+//     } else {
+//       db.none(
+//         `UPDATE game
+//        SET winner = 'DRAW' WHERE match_id = $1`,
+//         [matchId]
+//       );
+//     }
+//   }
 
-  function fullTimeStatus(matchId) {
-    db.none(`UPDATE game SET status = 'completed' WHERE match_id = $1`, [
-      matchId
-    ]);
-  }
+//   function fullTimeStatus(matchId) {
+//     db.none(`UPDATE game SET status = 'completed' WHERE match_id = $1`, [
+//       matchId
+//     ]);
+//   }
 
-  function runSecondHalf(matchId) {
-    const interval = setInterval(function() {
-      console.log(`counter ${counter}`);
-      if (counter < 90) {
-        runGame(matchId);
-        // console.log(homeTeam, awayTeam);
-      } else {
-        clearInterval(interval);
-        console.log("FULL-TIME");
-        sendResult(matchId);
-        fullTimeStatus(matchId);
-      }
-      counter++;
-    }, 100);
-  }
+//   function runSecondHalf(matchId) {
+//     const interval = setInterval(function() {
+//       console.log(`counter ${counter}`);
+//       if (counter < 90) {
+//         runGame(matchId);
+//         // console.log(homeTeam, awayTeam);
+//       } else {
+//         clearInterval(interval);
+//         console.log("FULL-TIME");
+//         sendResult(matchId);
+//         fullTimeStatus(matchId);
+//       }
+//       counter++;
+//     }, 100);
+//   }
 
-  function runHalfTime(matchId) {
-    const interval = setInterval(function() {
-      if (counter === 46) {
-        runSecondHalf(matchId);
-      } else {
-        clearInterval(interval);
-      }
-      counter++;
-    }, 5000);
-  }
+//   function runHalfTime(matchId) {
+//     const interval = setInterval(function() {
+//       if (counter === 46) {
+//         runSecondHalf(matchId);
+//       } else {
+//         clearInterval(interval);
+//       }
+//       counter++;
+//     }, 5000);
+//   }
 
-  function runGame(matchId) {
-    let randomNumber = randomInt(1, 90);
-    console.log(homeTeam, awayTeam);
-    if (randomNumber < 3) {
-      db.none(
-        `UPDATE game SET home_score = home_score + 1 WHERE match_id = $1`,
-        [matchId]
-      );
-      homeTeam += 1;
-    } else if (randomNumber > 8 && randomNumber < 11) {
-      db.none(
-        `UPDATE game SET away_score = away_score + 1 WHERE match_id = $1`,
-        [matchId]
-      );
-      awayTeam += 1;
-    } else {
-      homeTeam = homeTeam;
-      awayTeam = awayTeam;
-    }
-  }
-  //// socket connection
+//   function runGame(matchId) {
+//     let randomNumber = randomInt(1, 90);
+//     console.log(homeTeam, awayTeam);
+//     if (randomNumber < 3) {
+//       db.none(
+//         `UPDATE game SET home_score = home_score + 1 WHERE match_id = $1`,
+//         [matchId]
+//       );
+//       homeTeam += 1;
+//     } else if (randomNumber > 8 && randomNumber < 11) {
+//       db.none(
+//         `UPDATE game SET away_score = away_score + 1 WHERE match_id = $1`,
+//         [matchId]
+//       );
+//       awayTeam += 1;
+//     } else {
+//       homeTeam = homeTeam;
+//       awayTeam = awayTeam;
+//     }
+//   }
+//   //// socket connection
 
-  function runFirstHalf(matchId) {
-    const interval = setInterval(function() {
-      console.log(`counter ${counter}`);
-      if (counter < 45) {
-        runGame(matchId);
-        // console.log(homeTeam, awayTeam);
-      } else {
-        clearInterval(interval);
-        console.log("HALF-TIME");
-        runHalfTime(matchId);
-      }
-      counter++;
-    }, 100);
-  }
+//   function runFirstHalf(matchId) {
+//     const interval = setInterval(function() {
+//       console.log(`counter ${counter}`);
+//       if (counter < 45) {
+//         runGame(matchId);
+//         // console.log(homeTeam, awayTeam);
+//       } else {
+//         clearInterval(interval);
+//         console.log("HALF-TIME");
+//         runHalfTime(matchId);
+//       }
+//       counter++;
+//     }, 100);
+//   }
 
-  function startGame(matchId) {
-    db.none(`UPDATE game SET status = 'live' WHERE match_id = $1`, [matchId]);
-    runGame(matchId);
-    console.log("KICK-OFF DB");
-    runFirstHalf(matchId);
-  }
+//   function startGame(matchId) {
+//     db.none(`UPDATE game SET status = 'live' WHERE match_id = $1`, [matchId]);
+//     runGame(matchId);
+//     console.log("KICK-OFF DB");
+//     runFirstHalf(matchId);
+//   }
 
-  function runningGame(gameId) {
-    // console.log("ive started");
-    db.one(`SELECT match_id FROM game WHERE id = $1`, [gameId]).then(data => {
-      // startGame(data.match_id);
-      startGame(data.match_id);
-    });
-  }
-  runningGame(gameId);
+//   function runningGame(gameId) {
+//     // console.log("ive started");
+//     db.one(`SELECT match_id FROM game WHERE id = $1`, [gameId]).then(data => {
+//       // startGame(data.match_id);
+//       startGame(data.match_id);
+//     });
+//   }
+//   runningGame(gameId);
+// }
+
+// function sendToCLient() {
+//   io.on("connection", socket => {
+//     // console.log("i am connected", gameId);
+//     let dbRefCount = 0;
+//     const interval = setInterval(() => {
+//       // console.log("inside interval");
+//       if (dbRefCount < 90) {
+//         // generate scores
+//         // send scores to browser
+//         // after game end, save results to db
+//         db.many(`SELECT * FROM game`).then(data => {
+//           // console.log("inside db call", gameId);
+//           socket.emit("matchDetails", data);
+//         });
+//       } else {
+//         clearInterval(interval);
+//       }
+//       dbRefCount++;
+//     }, 1000);
+//   });
+// }
+
+let counter = 0;
+let homeTeam = 0;
+let awayTeam = 0;
+let status = "";
+
+//// Update the database with final scores
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function sendToCLient() {
-  io.on("connection", socket => {
-    // console.log("i am connected", gameId);
-    let dbRefCount = 0;
-    const interval = setInterval(() => {
-      // console.log("inside interval");
-      if (dbRefCount < 90) {
-        // generate scores
-        // send scores to browser
-        // after game end, save results to db
-        db.many(`SELECT * FROM game`).then(data => {
-          // console.log("inside db call", gameId);
-          socket.emit("matchDetails", data);
-        });
-      } else {
-        clearInterval(interval);
-      }
-      dbRefCount++;
-    }, 1000);
-  });
+function updateScore() {
+  let randomNumber = randomInt(1, 90);
+  if (randomNumber < 3) {
+    homeTeam += 1;
+    console.log("homeTeam: ", homeTeam);
+  } else if (randomNumber > 8 && randomNumber < 11) {
+    awayTeam += 1;
+    console.log("awayTeam: ", awayTeam);
+  } else {
+    homeTeam = homeTeam;
+    awayTeam = awayTeam;
+  }
+}
+
+function runGame(gameId) {
+  const interval = setInterval(function() {
+    if (counter < 46 || counter > 55) {
+      updateScore();
+      status = "LIVE";
+    } else {
+      status = "HALF-TIME";
+    }
+    counter++;
+    if (counter > 100) {
+      clearInterval(interval);
+      console.log("ive finished");
+      db.none("UPDATE game SET home_score = $1 WHERE id = $2", [
+        homeTeam,
+        gameId
+      ]);
+    }
+  }, 100);
 }
 
 ///// OUR SOCKET CONNECTION
-
+function startSocket(gameId) {
+  io.on("connection", socket => {
+    let count = 0;
+    const repeater = setInterval(function() {
+      if (count < 100) {
+        let matchData = {
+          [gameId]: {
+            currentScore: { home: homeTeam, away: awayTeam },
+            matchStatus: status,
+            countx: count,
+            matchNumber: gameId
+          }
+        };
+        socket.emit("matchDetails", matchData);
+      } else {
+        clearInterval(repeater);
+      }
+      count++;
+    }, 100);
+  });
+}
 // io.on("connection", socket => {
 //   // let counter = 0;
 //   let repeater = setInterval(function() {
@@ -353,8 +418,10 @@ app.post("/signup", function(req, res) {
 
 app.post("/admin", function(req, res) {
   const { gameId } = req.body;
-  doEverything(gameId);
-  sendToCLient();
+  // doEverything(gameId);
+  // sendToCLient();
+  runGame(gameId);
+  startSocket(gameId);
 });
 
 // CREATE POOL
