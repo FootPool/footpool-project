@@ -98,23 +98,16 @@ function getRouter(db) {
   router.post("/placebet", function(req, res) {
     const { user, pool, guesses } = req.body;
 
-    db.one(
-      `SELECT id FROM pool
-    WHERE poolname = $1`,
-      [pool]
-    )
-      .then(data => {
-        return db.tx(t => {
-          const results = Object.entries(guesses).map(guess =>
-            t.none(
-              `INSERT INTO bet(user_id, bet, match_id, pool_id)
-            VALUES ($1, $2, $3, $4)`,
-              [user.id, guess[1], parseInt(guess[0], 10), data.id]
-            )
-          );
-          return t.batch(results);
-        });
-      })
+    db.tx(t => {
+      const results = Object.entries(guesses).map(guess =>
+        t.none(
+          `INSERT INTO bet(user_id, bet, match_id, pool_id)
+          VALUES ($1, $2, $3, $4)`,
+          [user.id, guess[1], parseInt(guess[0], 10), pool.id]
+        )
+      );
+      return t.batch(results);
+    })
       .then(data => {
         res.status(200).end();
       })
@@ -124,16 +117,15 @@ function getRouter(db) {
   });
 
   // VALIDATE USER IN POOL
-  router.get("/validate/:userId/:poolName", function(req, res) {
+  router.get("/validate/:userId/:poolId", function(req, res) {
     const userId = req.params.userId;
-    const poolName = req.params.poolName;
+    const poolId = req.params.poolId;
 
     db.one(
-      `SELECT count(*) FROM bet, pool
-      WHERE bet.user_id = $1
-      AND bet.pool_id = pool.id
-      AND pool.poolName = $2`,
-      [userId, poolName]
+      `SELECT count(*) FROM bet
+      WHERE bet.user_id=$1
+      AND bet.pool_id=$2`,
+      [userId, poolId]
     )
       .then(data => {
         res.json({
