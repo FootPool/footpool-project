@@ -11,7 +11,7 @@ const mapStateToProps = reduxState => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addNewPool = () => dispatch(addNewPool())
+    addNewPool: () => dispatch(addNewPool())
   };
 };
 
