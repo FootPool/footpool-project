@@ -8,27 +8,12 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({ path: "./.envrc" });
 const fetch = require("node-fetch");
-const io = require("socket.io");
-
 const app = express();
+// const io = require("socket.io");
+const socket = require("socket.io");
 const server = require("http").createServer(app);
-const socket = io(server);
-socket.on("connection", function(client) {
-  client.on("event", function(data) {
-    console.log("data:", data);
-  });
-  client.on("join", function(data) {
-    console.log("join: data =", data);
-    client.emit("message", "Howdy from the server!");
-  });
-  client.on("disconnect", function() {
-    console.log("disconnected");
-  });
-  // const dummy = setInterval(() => {
-  //   const score = 10;
-  //   client.emit("message", { score });
-  // }, 1000);
-});
+// const socket = io(server);
+const io = socket(server);
 
 const db = pgp({
   host: "localhost",
@@ -53,6 +38,183 @@ app.use(
     saveUninitialized: false
   })
 );
+
+// db.many(`SELECT match_id FROM game`).then(data => {
+//   console.log(data);
+//   generateScores(data);
+// });
+
+// function generateScores() {}
+
+//// generate Function for virtual scores
+
+function doEverything(gameId) {
+  let counter = 0;
+  let homeTeam = 0;
+  let awayTeam = 0;
+
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  function sendResult(matchId) {
+    if (homeTeam > awayTeam) {
+      db.none(
+        `UPDATE game
+       SET winner = 'HOME_TEAM' WHERE match_id = $1`,
+        [matchId]
+      );
+    } else if (awayTeam > homeTeam) {
+      db.none(
+        `UPDATE game
+       SET winner = 'AWAY_TEAM' WHERE match_id = $1`,
+        [matchId]
+      );
+    } else {
+      db.none(
+        `UPDATE game
+       SET winner = 'DRAW' WHERE match_id = $1`,
+        [matchId]
+      );
+    }
+  }
+
+  function fullTimeStatus(matchId) {
+    db.none(`UPDATE game SET status = 'completed' WHERE match_id = $1`, [
+      matchId
+    ]);
+  }
+
+  function runSecondHalf(matchId) {
+    const interval = setInterval(function() {
+      console.log(`counter ${counter}`);
+      if (counter < 90) {
+        runGame(matchId);
+        // console.log(homeTeam, awayTeam);
+      } else {
+        clearInterval(interval);
+        console.log("FULL-TIME");
+        sendResult(matchId);
+        fullTimeStatus(matchId);
+      }
+      counter++;
+    }, 100);
+  }
+
+  function runHalfTime(matchId) {
+    const interval = setInterval(function() {
+      if (counter === 46) {
+        runSecondHalf(matchId);
+      } else {
+        clearInterval(interval);
+      }
+      counter++;
+    }, 5000);
+  }
+
+  function runGame(matchId) {
+    let randomNumber = randomInt(1, 90);
+    console.log(homeTeam, awayTeam);
+    if (randomNumber < 3) {
+      db.none(
+        `UPDATE game SET home_score = home_score + 1 WHERE match_id = $1`,
+        [matchId]
+      );
+      homeTeam += 1;
+    } else if (randomNumber > 8 && randomNumber < 11) {
+      db.none(
+        `UPDATE game SET away_score = away_score + 1 WHERE match_id = $1`,
+        [matchId]
+      );
+      awayTeam += 1;
+    } else {
+      homeTeam = homeTeam;
+      awayTeam = awayTeam;
+    }
+  }
+  //// socket connection
+
+  function runFirstHalf(matchId) {
+    const interval = setInterval(function() {
+      console.log(`counter ${counter}`);
+      if (counter < 45) {
+        runGame(matchId);
+        // console.log(homeTeam, awayTeam);
+      } else {
+        clearInterval(interval);
+        console.log("HALF-TIME");
+        runHalfTime(matchId);
+      }
+      counter++;
+    }, 100);
+  }
+
+  function startGame(matchId) {
+    db.none(`UPDATE game SET status = 'live' WHERE match_id = $1`, [matchId]);
+    runGame(matchId);
+    console.log("KICK-OFF DB");
+    runFirstHalf(matchId);
+  }
+
+  function runningGame(gameId) {
+    // console.log("ive started");
+    db.one(`SELECT match_id FROM game WHERE id = $1`, [gameId]).then(data => {
+      // startGame(data.match_id);
+      startGame(data.match_id);
+    });
+  }
+  runningGame(gameId);
+}
+
+function sendToCLient() {
+  io.on("connection", socket => {
+    // console.log("i am connected", gameId);
+    let dbRefCount = 0;
+    const interval = setInterval(() => {
+      // console.log("inside interval");
+      if (dbRefCount < 90) {
+        // generate scores
+        // send scores to browser
+        // after game end, save results to db
+        db.many(`SELECT * FROM game`).then(data => {
+          // console.log("inside db call", gameId);
+          socket.emit("matchDetails", data);
+        });
+      } else {
+        clearInterval(interval);
+      }
+      dbRefCount++;
+    }, 1000);
+  });
+}
+
+///// OUR SOCKET CONNECTION
+
+// io.on("connection", socket => {
+//   // let counter = 0;
+//   let repeater = setInterval(function() {
+//     if (counterx < 40) {
+//       // startGame();
+
+//       let resultToSend = {
+//         type: "currentScore",
+//         message: { home: homeTeam, away: awayTeam }
+//       };
+
+//       socket.emit("update", resultToSend);
+//       // counter += 1;
+//     } else {
+//       clearInterval(repeater);
+//     }
+//   }, 500);
+
+// setInterval(() => {
+//   console.log("everySecond");
+//   socket.emit("update", james);
+// }, 1000);
+
+//   console.log("hi i am connected");
+// });
 
 // AUTHENTICATION FUNCTIONS
 
@@ -132,6 +294,12 @@ passport.use(
   })
 );
 
+// ADMIN
+
+app.get("/admin", function(req, res) {
+  res.render("admin");
+});
+
 // LOG IN
 
 app.get("login", function(req, res) {
@@ -181,6 +349,12 @@ app.post("/signup", function(req, res) {
         })
         .catch(error => res.json({ error: error.message }));
     });
+});
+
+app.post("/admin", function(req, res) {
+  const { gameId } = req.body;
+  doEverything(gameId);
+  sendToCLient();
 });
 
 // CREATE POOL
