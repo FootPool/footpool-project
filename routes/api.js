@@ -2,6 +2,7 @@ const express = require("express");
 
 const passport = require("passport");
 const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
 
 function getRouter(db) {
   const router = express.Router();

@@ -14,11 +14,6 @@ class Createpool extends React.Component {
     };
 
     this.validatePool = this.validatePool.bind(this);
-    this.addNewPool = this.addNewPool.bind(this);
-  }
-
-  poolDetailsReceiver(poolId, pool, week) {
-    this.props.receiveNewPoolDetails(poolId, pool, week);
   }
 
   validatePool(event) {
@@ -31,39 +26,7 @@ class Createpool extends React.Component {
       ? alert(
           "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
         )
-      : this.addNewPool(poolName, matchWeek);
-  }
-
-  addNewPool(poolName, matchWeek) {
-    this.setState({ poolSaving: true });
-
-    fetch("/api/pool", {
-      method: "POST",
-      body: JSON.stringify({ poolName, matchWeek }),
-      credentials: "same-origin",
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          alert("Sorry, your pool was offside. Try again.");
-        }
-      })
-      .then(data => {
-        this.setState(
-          {
-            poolSaved: true,
-            poolName,
-            matchWeek,
-            poolId: data.poolId
-          },
-          () => this.poolDetailsReceiver(this.state.poolId, poolName, matchWeek)
-        );
-      })
-      .catch(error => alert("Sorry, your pool was offside. Try again."));
+      : this.props.addNewPool(poolName, matchWeek);
   }
 
   render() {
