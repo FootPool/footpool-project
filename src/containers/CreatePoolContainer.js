@@ -5,13 +5,16 @@ import { addNewPool } from "../actions/index";
 const mapStateToProps = reduxState => {
   return {
     user: reduxState.user,
-    selectedPoolId: reduxState.createPoolReducer.poolId
+    selectedPoolId: reduxState.createPoolReducer.poolId,
+    selectedPoolWeek: reduxState.createPoolReducer.selectedPoolWeek,
+    poolSaved: reduxState.createPoolReducer.poolSaved
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    addNewPool: () => dispatch(addNewPool())
+    addNewPool: (poolName, matchWeek) =>
+      dispatch(addNewPool(poolName, matchWeek))
   };
 };
 
