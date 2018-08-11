@@ -38,22 +38,31 @@ app.use(
     saveUninitialized: false
   })
 );
+////GET MATCH_ID FROM DATABASE
+db.many(`SELECT match_id FROM game`).then(data => {
+  // console.log(data);
+  createFixtureObject(data);
+  // console.log(scores);
+
+  // console.log(wow);
+  // console.log(scores[wow[1]]);
+});
 
 ////GLOBAL DATA FOR SCORE GENERATOR
 let counter = 0;
 let homeTeam = 0;
 let awayTeam = 0;
-let scores = {
-  1: {
-    home: 0,
-    away: 0
-  },
-  2: {
-    home: 0,
-    away: 0
-  }
-};
-// let status = "";
+let scores = {};
+
+////CREATE FIXTURE OBJECT
+function createFixtureObject(matchId) {
+  // console.log("this is match id", matchId);
+  matchId.map(item => {
+    // console.log(item.match_id);
+    scores[item.match_id] = { home: 0, away: 0 };
+  });
+  // console.log(scores);
+}
 
 ////CREATE RANDOM NUMBER
 function randomInt(min, max) {
@@ -61,26 +70,29 @@ function randomInt(min, max) {
 }
 
 ////UPDATES THE SCORE FOR HOME OR AWAY
-function updateScore() {
+function updateScore(scores) {
+  // console.log(scores);
+  const wow = Object.keys(scores);
+  // console.log(wow);
   ////GENERATOR SCORE
   let randomNumber = randomInt(1, 90);
 
   if (randomNumber < 3) {
     homeTeam += 1;
-    scores[1].home += 1;
-    console.log("Game 1 HOME", scores[1].home);
+    scores[wow[1]].home += 1;
+    console.log("Game 1 HOME", scores[wow[1]].home);
     // console.log("homeTeam: ", homeTeam);
   } else if (randomNumber > 8 && randomNumber < 11) {
     awayTeam += 1;
-    scores[1].away += 1;
-    console.log("Game 1 AWAY", scores[1].away);
+    scores[wow[1]].away += 1;
+    console.log("Game 1 AWAY", scores[wow[1]].away);
     // console.log("awayTeam: ", awayTeam);
   } else if (randomNumber > 85) {
-    scores[2].home += 1;
-    console.log("Game 2 HOME", scores[2].home);
+    scores[wow[2]].home += 1;
+    console.log("Game 2 HOME", scores[wow[2]].home);
   } else if (randomNumber > 11 && randomNumber < 13) {
-    scores[2].away += 1;
-    console.log("Game 2 AWAY", scores[2].away);
+    scores[wow[2]].away += 1;
+    console.log("Game 2 AWAY", scores[wow[2]].away);
   } else {
     homeTeam = homeTeam;
     awayTeam = awayTeam;
@@ -91,7 +103,7 @@ function updateScore() {
 function runGame(gameId) {
   const interval = setInterval(function() {
     if (counter < 46 || counter > 55) {
-      updateScore();
+      updateScore(scores);
       status = "LIVE";
     } else {
       status = "HALF-TIME";
@@ -267,6 +279,7 @@ app.post("/admin", function(req, res) {
   const { gameId } = req.body;
   runGame(gameId);
   socketConnection();
+  // console.log(scores);
 });
 
 // CREATE POOL
