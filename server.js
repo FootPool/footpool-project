@@ -234,54 +234,22 @@ function runGame(gameId) {
 }
 
 ///// OUR SOCKET CONNECTION
-function startSocket(gameId) {
-  io.on("connection", socket => {
-    let count = 0;
-    const repeater = setInterval(function() {
-      if (count < 100) {
-        let matchData = {
-          [gameId]: {
-            home: homeTeam,
-            away: awayTeam,
-            matchStatus: status,
-            countx: count,
-            matchNumber: gameId
-          }
-        };
-        socket.emit("matchDetails", matchData);
-      } else {
-        clearInterval(repeater);
-      }
-      count++;
-    }, 100);
-  });
-}
-// io.on("connection", socket => {
-//   // let counter = 0;
-//   let repeater = setInterval(function() {
-//     if (counterx < 40) {
-//       // startGame();
 
-//       let resultToSend = {
-//         type: "currentScore",
-//         message: { home: homeTeam, away: awayTeam }
-//       };
-
-//       socket.emit("update", resultToSend);
-//       // counter += 1;
-//     } else {
-//       clearInterval(repeater);
-//     }
-//   }, 500);
-
-// setInterval(() => {
-//   console.log("everySecond");
-//   socket.emit("update", james);
-// }, 1000);
-
-//   console.log("hi i am connected");
-// });
-
+io.on("connection", socket => {
+  let count = 0;
+  const repeater = setInterval(function() {
+    if (count < 100) {
+      let matchData = {
+        home: homeTeam,
+        away: awayTeam
+      };
+      socket.emit("matchDetails", matchData);
+    } else {
+      clearInterval(repeater);
+    }
+    count++;
+  }, 100);
+});
 // AUTHENTICATION FUNCTIONS
 
 function getUserByUsername(username) {
@@ -422,7 +390,6 @@ app.post("/admin", function(req, res) {
   // doEverything(gameId);
   // sendToCLient();
   runGame(gameId);
-  startSocket(gameId);
 });
 
 // CREATE POOL
