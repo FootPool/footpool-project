@@ -48,6 +48,7 @@ class Pooldetail extends React.Component {
   }
 
   render() {
+    console.log(this.props.selectedPoolId);
     if (this.state.isValid) {
       return (
         // Liveresults.js

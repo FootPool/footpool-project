@@ -131,16 +131,17 @@ export const addNewPool = (poolName, matchWeek) => dispatch => {
       }
     })
     .then(data => {
-      dispatch(updateComponentAfterCreatingPool(data));
+      dispatch(updateComponentAfterCreatingPool(data, matchWeek));
     })
     .catch(error => {
       alert("Sorry, your pool was offside. Try again.");
     });
 };
 
-export function updateComponentAfterCreatingPool(data) {
+export function updateComponentAfterCreatingPool(data, matchWeek) {
   return {
     type: "UPDATE_COMPONENT_AFTER_POOL_CREATED",
-    poolId: data.poolId
+    poolId: data.poolId,
+    selectedPoolWeek: matchWeek
   };
 }

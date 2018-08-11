@@ -20,10 +20,14 @@ const mapStateToProps = reduxState => {
   };
 };
 
-const mapDispatchToProps = {
-  validateUserInPool,
-  getFixtures,
-  sendBetsToDb
+const mapDispatchToProps = dispatch => {
+  return {
+    validateUserInPool: (userId, poolId) =>
+      dispatch(validateUserInPool(userId, poolId)),
+    getFixtures: week => dispatch(getFixtures(week)),
+    sendBetsToDb: (poolId, userId, guesses) =>
+      dispatch(sendBetsToDb(poolId, userId, guesses))
+  };
 };
 
 export default connect(

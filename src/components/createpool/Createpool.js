@@ -30,7 +30,7 @@ class Createpool extends React.Component {
   }
 
   render() {
-    if (this.state.poolSaved) return <Redirect to="/pooldetail" />;
+    if (this.props.poolSaved) return <Redirect to="/pooldetail" />;
 
     return (
       <div className="createpool--container">
