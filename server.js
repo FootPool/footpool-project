@@ -102,13 +102,16 @@ function runGame(gameId) {
       console.log("GAME COMPLETE", scores);
 
       ////UPDATING THE FINAL SCORE TO DATABASE
-      db.none(
-        "UPDATE game SET home_score = $1, away_score = $2 WHERE id = $3",
-        [homeTeam, awayTeam, gameId]
-      ).then(function() {
-        counter = 0;
-        homeTeam = 0;
-        awayTeam = 0;
+      Object.keys(scores).map(item => {
+        // console.log(scores[item].home);
+        db.none(
+          "UPDATE game SET home_score = $1, away_score = $2 WHERE id = $3",
+          [scores[item].home, scores[item].away, item]
+        ).then(function() {
+          counter = 0;
+          homeTeam = 0;
+          awayTeam = 0;
+        });
       });
     }
   }, 100);
