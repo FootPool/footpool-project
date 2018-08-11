@@ -241,7 +241,8 @@ function startSocket(gameId) {
       if (count < 100) {
         let matchData = {
           [gameId]: {
-            currentScore: { home: homeTeam, away: awayTeam },
+            home: homeTeam,
+            away: awayTeam,
             matchStatus: status,
             countx: count,
             matchNumber: gameId

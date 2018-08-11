@@ -7,7 +7,7 @@ class Fixtures extends React.Component {
     super();
 
     this.state = {
-      fixtures: [{ home_team: "g", away_team: "g" }]
+      fixtures: [{}]
     };
   }
 
@@ -30,7 +30,10 @@ class Fixtures extends React.Component {
     //   socket.emit("join", "hello world from client");
     // });
     socket.on("matchDetails", data => {
-      console.log(data);
+      // console.log(data);
+      this.setState({ fixtures: [data] }, () =>
+        console.log("this is the data", data)
+      );
     });
   }
 
@@ -41,14 +44,11 @@ class Fixtures extends React.Component {
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
           <h2>Fixture List</h2>
-          {/* {this.state.fixtures.map(
-            ({ home_team, away_team, home_score, away_score, status }) => (
-              <div>
-                {home_team} : {home_score} - {away_score} : {away_team} -
-                {status}
-              </div>
-            )
-          )} */}
+          {this.state.fixtures.map(item => (
+            <div>
+              {item.gameId} : {item.gameId}
+            </div>
+          ))}
         </div>
       </div>
     );
