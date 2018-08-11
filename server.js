@@ -81,10 +81,11 @@ function runGame(gameId) {
       clearInterval(interval);
       console.log("GAME COMPLETE");
 
-      db.none("UPDATE game SET home_score = $1 WHERE id = $2", [
-        homeTeam,
-        gameId
-      ]).then(function() {
+      ////UPDATING THE FINAL SCORE TO DATABASE
+      db.none(
+        "UPDATE game SET home_score = $1, away_score = $2 WHERE id = $3",
+        [homeTeam, awayTeam, gameId]
+      ).then(function() {
         counter = 0;
         homeTeam = 0;
         awayTeam = 0;
