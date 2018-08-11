@@ -43,6 +43,16 @@ app.use(
 let counter = 0;
 let homeTeam = 0;
 let awayTeam = 0;
+let scores = {
+  1: {
+    home: 0,
+    away: 0
+  },
+  2: {
+    home: 0,
+    away: 0
+  }
+};
 // let status = "";
 
 ////CREATE RANDOM NUMBER
@@ -57,10 +67,20 @@ function updateScore() {
 
   if (randomNumber < 3) {
     homeTeam += 1;
-    console.log("homeTeam: ", homeTeam);
+    scores[1].home += 1;
+    console.log("Game 1 HOME", scores[1].home);
+    // console.log("homeTeam: ", homeTeam);
   } else if (randomNumber > 8 && randomNumber < 11) {
     awayTeam += 1;
-    console.log("awayTeam: ", awayTeam);
+    scores[1].away += 1;
+    console.log("Game 1 AWAY", scores[1].away);
+    // console.log("awayTeam: ", awayTeam);
+  } else if (randomNumber > 85) {
+    scores[2].home += 1;
+    console.log("Game 2 HOME", scores[2].home);
+  } else if (randomNumber > 11 && randomNumber < 13) {
+    scores[2].away += 1;
+    console.log("Game 2 AWAY", scores[2].away);
   } else {
     homeTeam = homeTeam;
     awayTeam = awayTeam;
@@ -79,7 +99,7 @@ function runGame(gameId) {
     counter++;
     if (counter > 100) {
       clearInterval(interval);
-      console.log("GAME COMPLETE");
+      console.log("GAME COMPLETE", scores);
 
       ////UPDATING THE FINAL SCORE TO DATABASE
       db.none(
@@ -104,7 +124,7 @@ function socketConnection() {
           home: homeTeam,
           away: awayTeam
         };
-        socket.emit("matchDetails", matchData);
+        socket.emit("matchDetails", scores);
       } else {
         clearInterval(repeater);
       }
