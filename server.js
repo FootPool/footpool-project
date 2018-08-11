@@ -80,13 +80,15 @@ function runGame(gameId) {
     if (counter > 100) {
       clearInterval(interval);
       console.log("GAME COMPLETE");
-      counter = 0;
-      homeTeam = 0;
-      awayTeam = 0;
+
       db.none("UPDATE game SET home_score = $1 WHERE id = $2", [
         homeTeam,
         gameId
-      ]);
+      ]).then(function() {
+        counter = 0;
+        homeTeam = 0;
+        awayTeam = 0;
+      });
     }
   }, 100);
 }
