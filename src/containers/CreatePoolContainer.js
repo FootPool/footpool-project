@@ -1,12 +1,11 @@
 import { connect } from "react-redux";
 import Createpool from "../components/createpool/Createpool";
-import { addNewPool } from "../actions/index";
+import { addNewPool, clearPoolInCreatePool } from "../actions/index";
 
 const mapStateToProps = reduxState => {
   return {
     user: reduxState.user,
-    selectedPoolId: reduxState.createPoolReducer.poolId,
-    selectedPoolWeek: reduxState.createPoolReducer.selectedPoolWeek,
+    lastPoolId: reduxState.createPoolReducer.lastPoolId,
     poolSaved: reduxState.createPoolReducer.poolSaved
   };
 };
@@ -14,7 +13,8 @@ const mapStateToProps = reduxState => {
 const mapDispatchToProps = dispatch => {
   return {
     addNewPool: (poolName, matchWeek) =>
-      dispatch(addNewPool(poolName, matchWeek))
+      dispatch(addNewPool(poolName, matchWeek)),
+    resetCreatePoolState: () => dispatch(clearPoolInCreatePool())
   };
 };
 

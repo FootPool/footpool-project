@@ -1,7 +1,7 @@
 const initialState = {
   user: {},
-  selectedPoolId: "",
-  selectedPoolWeek: ""
+  poolSaved: false,
+  lastPoolId: null
 };
 
 function createPoolReducer(reduxState = initialState, action) {
@@ -10,8 +10,14 @@ function createPoolReducer(reduxState = initialState, action) {
       return {
         ...reduxState,
         poolSaved: true,
-        selectedPoolId: action.poolId,
-        selectedPoolWeek: action.selectedPoolWeek
+        lastPoolId: action.poolId
+      };
+
+    case "CLEAR_POOL_IN_CREATE_POOL":
+      return {
+        ...reduxState,
+        poolSaved: false,
+        lastPoolId: null
       };
 
     default:

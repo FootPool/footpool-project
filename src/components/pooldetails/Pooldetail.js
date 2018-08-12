@@ -1,6 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
 import Header from "../header/Header";
+import { Redirect } from "react-router-dom";
 
 class Pooldetail extends React.Component {
   constructor(props) {
@@ -20,26 +21,27 @@ class Pooldetail extends React.Component {
   componentDidMount() {
     ReactModal.setAppElement("#root");
 
-    this.props.validateUserInPool(
-      this.props.user.id,
-      this.props.selectedPoolId
-    );
+    if (this.props.pool) {
+      this.props.validateUserInPool(this.props.user.id, this.props.pool.id);
+    }
   }
 
   handleOpenModal() {
-    this.props.getFixtures(this.props.selectedPoolWeek);
+    this.props.getFixtures(this.props.pool.match_week);
   }
 
   handleCloseModal() {
     const userId = this.props.user.id;
-    const poolId = this.props.selectedPoolId;
+    const poolId = this.props.pool.id;
     const guesses = this.state.guesses;
 
-    Object.keys(this.state.guesses).length !== 10
-      ? alert(
-          "Yellow Card! Place your bets on ALL of the games before submitting."
-        )
-      : this.props.sendBetsToDb(poolId, userId, guesses);
+    if (Object.keys(this.state.guesses).length !== 10) {
+      alert(
+        "Yellow Card! Place your bets on ALL of the games before submitting."
+      );
+    } else {
+      this.props.sendBetsToDb(poolId, userId, guesses);
+    }
   }
 
   handleSelect(matchId, choice) {
@@ -48,8 +50,11 @@ class Pooldetail extends React.Component {
   }
 
   render() {
-    console.log(this.props.selectedPoolId);
-    if (this.state.isValid) {
+    if (!this.props.pool) {
+      return <Redirect to="/choosepool" />;
+    }
+
+    if (this.props.isValid) {
       return (
         // Liveresults.js
         <div>YOU HAVE MADE YOUR GUESSES! 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥</div>
@@ -60,6 +65,9 @@ class Pooldetail extends React.Component {
         <div>
           <Header title="Pool Details" />
           <div>
+            <h2>
+              {this.props.poolId} {this.props.week}
+            </h2>
             <h2>Pool Members</h2>
             <p>Score</p>
             <div>
@@ -70,7 +78,7 @@ class Pooldetail extends React.Component {
                 isOpen={this.props.showModal}
                 contentLabel="Guesses Submitted Successfully"
               >
-                <form>
+                <div>
                   {this.props.matches.map((match, index) => {
                     const name = "match" + index;
                     const selectedMatchValue = this.state.guesses[match.id];
@@ -135,7 +143,7 @@ class Pooldetail extends React.Component {
                     );
                   })}
                   <button onClick={this.handleCloseModal}>Play</button>
-                </form>
+                </div>
               </ReactModal>
             </div>
           </div>

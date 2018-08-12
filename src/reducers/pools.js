@@ -11,11 +11,18 @@ function choosePoolsReducer(reduxState = initialState, action) {
         pools: action.pools
       });
 
-    case "JOIN_POOL":
-      return Object.assign({}, reduxState, {
-        selectedPoolId: action.selectedPoolId,
-        selectedPoolWeek: action.selectedPoolWeek
-      });
+    case "UPDATE_COMPONENT_AFTER_POOL_CREATED":
+      return {
+        ...reduxState,
+        pools: [
+          ...pools,
+          {
+            id: action.poolId,
+            poolname: action.poolName,
+            match_week: action.matchWeek
+          }
+        ]
+      };
 
     default:
       return reduxState;

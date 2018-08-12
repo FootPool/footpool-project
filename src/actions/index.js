@@ -21,14 +21,6 @@ export function receivePools(data) {
   };
 }
 
-export function joinPool(pool) {
-  return {
-    type: "JOIN_POOL",
-    selectedPoolId: pool.id,
-    selectedPoolWeek: pool.match_week
-  };
-}
-
 export const validateUserInPool = (userId, poolId) => dispatch => {
   if (!userId) {
     return { type: "__USER_INVALID" };
@@ -55,32 +47,19 @@ export function updateStateOfValidation(data, poolId) {
 }
 
 export const getFixtures = week => dispatch => {
-  if (week === undefined) {
-    return fetch(`http://api.football-data.org/v2/competitions/2021/matches`, {
+  return fetch(
+    `http://api.football-data.org/v2/competitions/2021/matches?matchday=${week}`,
+    {
       headers: {
         "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
       }
+    }
+  )
+    .then(res => (res.ok ? res.json() : Promise.reject(res)))
+    .then(data => {
+      dispatch(receiveFixtures(data.matches));
     })
-      .then(res => (res.ok ? res.json() : Promise.reject(res)))
-      .then(data => {
-        dispatch(receiveFixtures(data.matches));
-      })
-      .catch(err => console.log(err));
-  } else {
-    return fetch(
-      `http://api.football-data.org/v2/competitions/2021/matches?matchday=${week}`,
-      {
-        headers: {
-          "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
-        }
-      }
-    )
-      .then(res => (res.ok ? res.json() : Promise.reject(res)))
-      .then(data => {
-        dispatch(receiveFixtures(data.matches));
-      })
-      .catch(err => console.log(err));
-  }
+    .catch(err => console.log(err));
 };
 
 export function receiveFixtures(matches) {
@@ -109,8 +88,7 @@ export const sendBetsToDb = (poolId, userId, guesses) => dispatch => {
 
 export function updateComponentAfterPlacingBets() {
   return {
-    type: "UPDATE_COMPONENT_AFTER_BETS",
-    isValid: true
+    type: "UPDATE_COMPONENT_AFTER_BETS"
   };
 }
 
@@ -131,17 +109,30 @@ export const addNewPool = (poolName, matchWeek) => dispatch => {
       }
     })
     .then(data => {
-      dispatch(updateComponentAfterCreatingPool(data, matchWeek));
+      dispatch(updateComponentAfterCreatingPool(data, poolName, matchWeek));
     })
     .catch(error => {
       alert("Sorry, your pool was offside. Try again.");
     });
 };
 
-export function updateComponentAfterCreatingPool(data, matchWeek) {
+export function updateComponentAfterCreatingPool(data, poolName, matchWeek) {
   return {
     type: "UPDATE_COMPONENT_AFTER_POOL_CREATED",
     poolId: data.poolId,
-    selectedPoolWeek: matchWeek
+    poolName,
+    matchWeek
+  };
+}
+
+export function clearPoolInCreatePool() {
+  return {
+    type: "CLEAR_POOL_IN_CREATE_POOL"
+  };
+}
+
+export function clearPoolDetail() {
+  return {
+    type: "CLEAR_POOL_DETAIL"
   };
 }

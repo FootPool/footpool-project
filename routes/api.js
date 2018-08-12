@@ -97,14 +97,14 @@ function getRouter(db) {
 
   // PLACE BETS
   router.post("/placebet", function(req, res) {
-    const { user, pool, guesses } = req.body;
+    const { userId, poolId, guesses } = req.body;
 
     db.tx(t => {
       const results = Object.entries(guesses).map(guess =>
         t.none(
           `INSERT INTO bet(user_id, bet, match_id, pool_id)
           VALUES ($1, $2, $3, $4)`,
-          [user.id, guess[1], parseInt(guess[0], 10), pool.id]
+          [userId, guess[1], parseInt(guess[0], 10), poolId]
         )
       );
       return t.batch(results);

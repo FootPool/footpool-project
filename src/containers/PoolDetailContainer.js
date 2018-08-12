@@ -3,31 +3,30 @@ import Pooldetail from "../components/pooldetails/Pooldetail";
 import {
   validateUserInPool,
   getFixtures,
-  sendBetsToDb
+  sendBetsToDb,
+  clearPoolDetail
 } from "../actions/index";
 
-const mapStateToProps = reduxState => {
+const mapStateToProps = (
+  reduxState,
+  { location: { state: { poolId } = {} } = {} }
+) => {
+  const pool = reduxState.pools.pools.find(p => p.id === poolId);
   return {
     user: reduxState.user,
-    selectedPool: reduxState.selectedPool,
-    pools: reduxState.pools.pools,
-    selectedPoolId: reduxState.pools.selectedPoolId,
-    selectedPoolWeek: reduxState.pools.selectedPoolWeek,
-    isValid: reduxState.poolDetails[reduxState.pools.selectedPoolId],
+    pool,
+    isValid: reduxState.poolDetails[poolId],
     showModal: reduxState.poolDetails.showModal,
     matches: reduxState.poolDetails.matches,
     isValid: reduxState.poolDetails.isValid
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    validateUserInPool: (userId, poolId) =>
-      dispatch(validateUserInPool(userId, poolId)),
-    getFixtures: week => dispatch(getFixtures(week)),
-    sendBetsToDb: (poolId, userId, guesses) =>
-      dispatch(sendBetsToDb(poolId, userId, guesses))
-  };
+const mapDispatchToProps = {
+  validateUserInPool,
+  getFixtures,
+  sendBetsToDb,
+  clearPoolDetail
 };
 
 export default connect(

@@ -7,11 +7,9 @@ class Fixtures extends React.Component {
   constructor() {
     super();
 
-    this.socket = io.connect("http://localhost:8080");
-    this.socket.on("connect", data => {
-      this.socket.emit("join", "hello world from client");
-    });
-    this.socket.on("message", data => console.log(data));
+    this.state = {
+      fixtures: [{}]
+    };
   }
 
   componentDidMount() {
@@ -35,6 +33,8 @@ class Fixtures extends React.Component {
         </div>
       </div>
     );
+    // }
+    // return <div>loading</div>;
   }
 }
 

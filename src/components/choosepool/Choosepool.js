@@ -12,10 +12,6 @@ class Choosepool extends React.Component {
   }
 
   render() {
-    if (this.props.selectedPoolId) {
-      return <Redirect to={{ pathname: "/pooldetail" }} />;
-    }
-
     return (
       <div className="choosepool--container">
         <Header title="Choose Your Pool" />
@@ -28,13 +24,20 @@ class Choosepool extends React.Component {
               return (
                 <div
                   key={pool.id}
-                  week={pool.week}
+                  week={pool.match_week}
                   className="choosepool--pool-item"
                 >
                   <h3>{pool.poolname}</h3>
-                  <button type="button" onClick={() => this.selectPool(pool)}>
+                  <Link
+                    to={{
+                      pathname: "/pooldetail",
+                      state: {
+                        poolId: pool.id
+                      }
+                    }}
+                  >
                     JOIN POOL
-                  </button>
+                  </Link>
                 </div>
               );
             })}

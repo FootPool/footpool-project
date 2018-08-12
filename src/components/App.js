@@ -5,7 +5,7 @@ import FixturesContainer from "../containers/FixturesContainer";
 import ChoosePoolContainer from "../containers/ChoosePoolContainer";
 import CreatePoolContainer from "../containers/CreatePoolContainer";
 import PoolDetailContainer from "../containers/PoolDetailContainer";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import "../../static/styles/style.scss";
 
@@ -24,6 +24,7 @@ class App extends React.Component {
     return (
       <div>
         <Switch>
+          <Redirect exact path="/index" to="/choosepool" />
           <Route path="/choosepool" component={ChoosePoolContainer} />
           <Route path="/createpool" component={CreatePoolContainer} />
           <Route path="/pooldetail" component={PoolDetailContainer} />

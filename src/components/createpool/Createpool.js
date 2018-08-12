@@ -22,15 +22,32 @@ class Createpool extends React.Component {
     const poolName = document.querySelector("#pool-name").value;
     const matchWeek = document.querySelector("#match-week").value;
 
-    poolName === "" || matchWeek === undefined
-      ? alert(
-          "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
-        )
-      : this.props.addNewPool(poolName, matchWeek);
+    if (poolName === null || matchWeek === undefined) {
+      alert(
+        "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
+      );
+    } else {
+      this.props.addNewPool(poolName, matchWeek);
+      this.setState({ week: matchWeek });
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.resetCreatePoolState();
   }
 
   render() {
-    if (this.props.poolSaved) return <Redirect to="/pooldetail" />;
+    if (this.props.poolSaved) {
+      console.log("lastPoolId", this.props.lastPoolId);
+      return (
+        <Redirect
+          to={{
+            pathname: "/pooldetail",
+            state: { poolId: this.props.lastPoolId }
+          }}
+        />
+      );
+    }
 
     return (
       <div className="createpool--container">
@@ -39,7 +56,14 @@ class Createpool extends React.Component {
         <div>
           <form onSubmit={this.validatePool}>
             <input id="pool-name" type="text" placeholder="Pool name" />
-            <input id="match-week" type="text" placeholder="Starting week" />
+            <input
+              id="match-week"
+              type="number"
+              step="1"
+              min="1"
+              max="36"
+              placeholder="Starting week"
+            />
 
             <button type="submit" className="submit-button">
               Submit Pool
