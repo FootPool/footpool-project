@@ -6,11 +6,9 @@ class Fixtures extends React.Component {
   constructor() {
     super();
 
-    this.socket = io.connect("http://localhost:8080");
-    this.socket.on("connect", data => {
-      this.socket.emit("join", "hello world from client");
-    });
-    this.socket.on("message", data => console.log(data));
+    this.state = {
+      fixtures: [{}]
+    };
   }
 
   componentDidMount() {
@@ -26,24 +24,36 @@ class Fixtures extends React.Component {
       .then(response => response.json())
       .then(data => console.log(data))
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
+
+    const socket = io.connect("http://localhost:8080");
+    // socket.on("connect", data => {
+    //   socket.emit("join", "hello world from client");
+    // });
+    socket.on("matchDetails", data => {
+      // console.log(data);
+      this.setState({ fixtures: [data] }, () =>
+        console.log("this is the data", data)
+      );
+    });
   }
 
   render() {
+    // if (this.state.fixtures) {
     return (
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
           <h2>Fixture List</h2>
-
-          <p>Team A vs Team B</p>
-          <p>Team C vs Team D</p>
-          <p>Team E vs Team F</p>
-          <p>Team G vs Team H</p>
-          <p>Team I vs Team J</p>
-          <p>Team K vs Team L</p>
+          {this.state.fixtures.map(item => (
+            <div>
+              {item.gameId} : {item.gameId}
+            </div>
+          ))}
         </div>
       </div>
     );
+    // }
+    // return <div>loading</div>;
   }
 }
 

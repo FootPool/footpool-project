@@ -8,27 +8,12 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({ path: "./.envrc" });
 const fetch = require("node-fetch");
-const io = require("socket.io");
-
 const app = express();
+// const io = require("socket.io");
+const socket = require("socket.io");
 const server = require("http").createServer(app);
-const socket = io(server);
-socket.on("connection", function(client) {
-  client.on("event", function(data) {
-    console.log("data:", data);
-  });
-  client.on("join", function(data) {
-    console.log("join: data =", data);
-    client.emit("message", "Howdy from the server!");
-  });
-  client.on("disconnect", function() {
-    console.log("disconnected");
-  });
-  // const dummy = setInterval(() => {
-  //   const score = 10;
-  //   client.emit("message", { score });
-  // }, 1000);
-});
+// const socket = io(server);
+const io = socket(server);
 
 const db = pgp({
   host: "localhost",
@@ -38,7 +23,7 @@ const db = pgp({
   password: process.env.PASSWORD
 });
 
-console.log(process.env.DATABASE);
+// console.log(process.env.DATABASE);
 
 app.use(bodyParser.json());
 app.use("/static", express.static("static"));
@@ -53,9 +38,117 @@ app.use(
     saveUninitialized: false
   })
 );
+////GET MATCH_ID FROM DATABASE
+db.many(`SELECT match_id FROM game`).then(data => {
+  // console.log(data);
+  createFixtureObject(data);
+  // console.log(scores);
+
+  // console.log(wow);
+  // console.log(scores[wow[1]]);
+});
+
+////GLOBAL DATA FOR SCORE GENERATOR
+let counter = 0;
+let homeTeam = 0;
+let awayTeam = 0;
+let scores = {};
+
+////CREATE FIXTURE OBJECT
+function createFixtureObject(matchId) {
+  // console.log("this is match id", matchId);
+  matchId.map(item => {
+    // console.log(item.match_id);
+    scores[item.match_id] = { home: 0, away: 0 };
+  });
+  // console.log(scores);
+}
+
+////CREATE RANDOM NUMBER
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+////UPDATES THE SCORE FOR HOME OR AWAY
+function updateScore(scores) {
+  // console.log(scores);
+  const wow = Object.keys(scores);
+  // console.log(wow);
+  ////GENERATOR SCORE
+  let randomNumber = randomInt(1, 90);
+
+  if (randomNumber < 3) {
+    homeTeam += 1;
+    scores[wow[1]].home += 1;
+    console.log("Game 1 HOME", scores[wow[1]].home);
+    // console.log("homeTeam: ", homeTeam);
+  } else if (randomNumber > 8 && randomNumber < 11) {
+    awayTeam += 1;
+    scores[wow[1]].away += 1;
+    console.log("Game 1 AWAY", scores[wow[1]].away);
+    // console.log("awayTeam: ", awayTeam);
+  } else if (randomNumber > 85) {
+    scores[wow[2]].home += 1;
+    console.log("Game 2 HOME", scores[wow[2]].home);
+  } else if (randomNumber > 11 && randomNumber < 13) {
+    scores[wow[2]].away += 1;
+    console.log("Game 2 AWAY", scores[wow[2]].away);
+  } else {
+    homeTeam = homeTeam;
+    awayTeam = awayTeam;
+  }
+}
+
+////STARTS THE GAME
+function runGame(gameId) {
+  const interval = setInterval(function() {
+    if (counter < 46 || counter > 55) {
+      updateScore(scores);
+      status = "LIVE";
+    } else {
+      status = "HALF-TIME";
+    }
+    counter++;
+    if (counter > 100) {
+      clearInterval(interval);
+      console.log("GAME COMPLETE", scores);
+
+      ////UPDATING THE FINAL SCORE TO DATABASE
+      Object.keys(scores).map(item => {
+        // console.log(scores[item].home);
+        db.none(
+          "UPDATE game SET home_score = $1, away_score = $2 WHERE id = $3",
+          [scores[item].home, scores[item].away, item]
+        ).then(function() {
+          counter = 0;
+          homeTeam = 0;
+          awayTeam = 0;
+        });
+      });
+    }
+  }, 100);
+}
+
+/////SOCKET CONNECTION
+function socketConnection() {
+  io.on("connection", socket => {
+    // let count = 0;
+    const repeater = setInterval(function() {
+      if (counter < 100) {
+        let matchData = {
+          home: homeTeam,
+          away: awayTeam
+        };
+        socket.emit("matchDetails", scores);
+      } else {
+        clearInterval(repeater);
+      }
+      // count++;
+    }, 100);
+  });
+}
 
 // AUTHENTICATION FUNCTIONS
-
 function getUserByUsername(username) {
   return db.one(
     `SELECT * FROM fpuser
@@ -93,12 +186,10 @@ passport.deserializeUser(function(id, done) {
 });
 
 // INITIALISE PASSPORT AND SESSION
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 // RENDER PAGES
-
 app.get("/", function(req, res) {
   res.render("homepage");
 });
@@ -116,7 +207,6 @@ app.get("/reset", function(req, res) {
 });
 
 // AUTHENTICATE LOG IN
-
 passport.use(
   new LocalStrategy(function(username, password, done) {
     getUserByUsername(username)
@@ -132,8 +222,12 @@ passport.use(
   })
 );
 
-// LOG IN
+// ADMIN
+app.get("/admin", function(req, res) {
+  res.render("admin");
+});
 
+// LOG IN
 app.get("login", function(req, res) {
   res.render("login", {});
 });
@@ -146,14 +240,12 @@ app.post("/login", passport.authenticate("local", { session: true }), function(
 });
 
 // LOG OUT
-
 app.get("/logout", function(req, res) {
   req.logout();
   res.redirect("/");
 });
 
 // SIGN UP
-
 app.get("/signup", function(req, res) {
   res.render("signup");
 });
@@ -183,8 +275,14 @@ app.post("/signup", function(req, res) {
     });
 });
 
-// CREATE POOL
+app.post("/admin", function(req, res) {
+  const { gameId } = req.body;
+  runGame(gameId);
+  socketConnection();
+  // console.log(scores);
+});
 
+// CREATE POOL
 app.post("/pool", function(req, res) {
   const { poolName, matchWeek } = req.body;
 
@@ -238,7 +336,6 @@ app.post("/pool", function(req, res) {
 });
 
 // PLACE BETS
-
 app.post("/placebet", function(req, res) {
   const { user, pool, guesses } = req.body;
 
@@ -268,7 +365,6 @@ app.post("/placebet", function(req, res) {
 });
 
 // VALIDATE USER IN POOL
-
 app.get("/isuserinpool/:userId/:poolName", function(req, res) {
   const userId = req.params.userId;
   const poolName = req.params.poolName;
@@ -291,7 +387,6 @@ app.get("/isuserinpool/:userId/:poolName", function(req, res) {
 });
 
 // PROTECTED ROUTES
-
 app.get("/*", isLoggedIn, function(req, res) {
   res.render("index", { user: req.user });
 });
