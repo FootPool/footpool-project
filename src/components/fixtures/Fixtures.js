@@ -5,9 +5,9 @@ import Header from "../header/Header";
 class Fixtures extends React.Component {
   constructor() {
     super();
-
     this.state = {
-      fixtures: [{}]
+      results: [{}],
+      fixtures: {matches:[]}
     };
   }
 
@@ -22,7 +22,10 @@ class Fixtures extends React.Component {
       }
     )
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data => {
+        this.setState({ fixtures: data
+        })
+      })
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
 
     const socket = io.connect("http://localhost:8080");
@@ -31,7 +34,7 @@ class Fixtures extends React.Component {
     // });
     socket.on("matchDetails", data => {
       // console.log(data);
-      this.setState({ fixtures: [data] }, () =>
+      this.setState({ results: data.scores, bets: data.bets }, () =>
         console.log("this is the data", data)
       );
     });
@@ -39,16 +42,66 @@ class Fixtures extends React.Component {
 
   render() {
     // if (this.state.fixtures) {
+      var leaders = [];
+
+      if(this.state.bets){      
+        //gets unique usernames
+        var users = this.state.bets.map(bet => bet.username)
+          .filter((value, index, self) => self.indexOf(value) === index); 
+          
+        leaders = users.map(user => ({
+          user,
+          correctCount: this.state.bets.filter(bet => bet.username === user && bet.bet === bet.winner).length
+        }) );
+        leaders = leaders.sort((leader1, leader2) => leader2.correctCount - leader1.correctCount );
+      }
     return (
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
           <h2>Fixture List</h2>
-          {this.state.fixtures.map(item => (
-            <div>
-              {item.gameId} : {item.gameId}
-            </div>
-          ))}
+          <table>
+            <tbody>
+            <tr>
+              <th> Home Team</th>
+              <th></th>
+              <th> Score</th>
+              <th> </th>
+              <th> Away Team</th>
+            </tr>
+            {this.state.fixtures.matches.map((fixture, i) => {
+              const relevantResult = this.state.results.find(result => result.matchId === fixture.id);
+
+              return (<tr key={i}>
+              <td>{fixture.homeTeam.name}</td>
+              <td>{relevantResult ? relevantResult.home : 0}</td>
+              <td> : </td>
+              <td>{relevantResult ? relevantResult.away : 0}</td>
+              <td>{fixture.awayTeam.name}</td>
+              </tr>)
+            }
+          )}
+            </tbody>
+          </table>
+          <h2>Leaderboard</h2>
+          <table>
+            <tbody>
+            <tr>
+              <th> User</th>
+              <th></th>
+              <th> Correct guesses</th>
+            </tr>
+            {leaders.map((leader, i) => {
+              return (<tr key={i}>
+              <td>{leader.user}</td>
+              <td></td>
+              <td>{leader.correctCount}</td>
+              </tr>)
+            }
+          )}
+            </tbody>
+          </table>
+
         </div>
       </div>
     );

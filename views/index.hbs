@@ -11,9 +11,11 @@
 
   </div>
   <script type="text/javascript">
-    window.user = {
-      id: {{ user.id }}
-    };
+    if(window.user && window.user.id){
+      window.user = {
+        id: "{{ user.id }}"   
+      };
+    }
   </script>
   <script src="/static/bundle.js"></script>
 </body>
