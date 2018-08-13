@@ -5,23 +5,26 @@
   padding-left: 2rem;
   padding-right: 2rem;
   height: 100vh;
+  background-image: url("/static/images/football-pitch.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.row {
-    margin: 10px;
-  }
-  
-  .radiobtn {
-    padding: 5px;
-    background: green;
-    color: white;
-  }
-  
-  .radiobtn__input {
-    position: absolute;
-    opacity: 0;
-  }
-  
-  .radiobtn__input:checked + span {
-    color: yellow;
-  }
+// .row {
+//   margin: 10px;
+// }
+
+// .radiobtn {
+//   padding: 5px;
+//   background: green;
+//   color: white;
+// }
+
+// .radiobtn__input {
+//   position: absolute;
+//   opacity: 0;
+// }
+
+// .radiobtn__input:checked + span {
+//   color: yellow;
+// }

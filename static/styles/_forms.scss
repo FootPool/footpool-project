@@ -1,0 +1,42 @@
+// container
+.form-container {
+  justify-content: center;
+  padding: 1rem;
+  background-color: var(--background-color);
+}
+
+// inputs
+.form-input {
+  width: 100%;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  padding: 15px 0px;
+  border-radius: 9px;
+  background-color: var(--secondary-color);
+}
+
+// radio buttons
+.row {
+  text-align: center;
+  padding: 1rem;
+}
+.radiobtn {
+  padding: 5px;
+  background: var(--primary-color);
+  color: var(--font-color);
+}
+
+.radiobtn__input {
+  position: absolute;
+  opacity: 0;
+}
+
+.radiobtn__text {
+  font-family: var(--body);
+  flex-wrap: nowrap;
+  font-size: 0.6rem;
+}
+
+.radiobtn__input:checked + span {
+  color: var(--option);
+}

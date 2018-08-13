@@ -52,10 +52,15 @@ class Createpool extends React.Component {
     return (
       <div className="createpool--container">
         <Header title="Create a Pool" />
-        <div>Create Pool</div>
-        <div>
-          <form onSubmit={this.validatePool}>
-            <input id="pool-name" type="text" placeholder="Pool name" />
+        <div className="form-container">
+          <h3 className="createpool-title">Create Pool</h3>
+          <form onSubmit={this.validatePool} className="choosepool--pool-list">
+            <input
+              id="pool-name"
+              type="text"
+              placeholder="Pool name"
+              className="form-input"
+            />
             <input
               id="match-week"
               type="number"
@@ -63,11 +68,13 @@ class Createpool extends React.Component {
               min="1"
               max="36"
               placeholder="Starting week"
+              className="form-input"
             />
-
-            <button type="submit" className="submit-button">
-              Submit Pool
-            </button>
+            <div className="choosepool--option-buttons-container">
+              <button type="submit" className="button submit-button">
+                Submit Pool
+              </button>
+            </div>
           </form>
         </div>
         {this.state.poolSaving ? <Loader /> : null}

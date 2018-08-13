@@ -16,7 +16,7 @@ class Choosepool extends React.Component {
       <div className="choosepool--container">
         <Header title="Choose Your Pool" />
 
-        <div>
+        <div className="form-container">
           <h3 className="choosepool--title">Your pools</h3>
 
           <div className="choosepool--pool-list">
@@ -35,9 +35,11 @@ class Choosepool extends React.Component {
                         poolId: pool.id
                       }
                     }}
+                    className="link-option"
                   >
                     JOIN POOL
                   </Link>
+                  <hr />
                 </div>
               );
             })}
@@ -45,7 +47,7 @@ class Choosepool extends React.Component {
 
           <div className="choosepool--option-buttons-container">
             <Link to="/createpool">
-              <button type="button" className="choosepool--option-button">
+              <button type="button" className="button option-button">
                 Create Pool
               </button>
             </Link>

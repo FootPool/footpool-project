@@ -1,11 +1,22 @@
-.edit-modal {
-  align-content: center;
-  margin-top: 200px;
-  height: 100px;
+.modal-container {
+  // margin-top: 150px;
+  height: 100vh;
   width: 100%;
   background-color: var(--primary-color);
 }
 
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  margin: 3rem 0.7rem;
+}
+
 .modal-input {
-  padding: 10px 7px;
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-color);
+  padding: 15px 0px;
+  border-radius: 9px;
+  margin: 0.5rem 0rem;
 }

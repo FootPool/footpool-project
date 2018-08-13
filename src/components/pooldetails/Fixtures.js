@@ -69,15 +69,15 @@ class Fixtures extends React.Component {
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
-          <h2>{this.props.pool.poolname}: Fixture List</h2>
+          <h2>{this.props.pool.poolname}: Scores</h2>
           <table>
-            <tbody>
-              <tr>
-                <th> Home Team</th>
+            <tbody className="fixture-list__current-scores">
+              <tr className="fixture--table-header">
+                <th>Home Team</th>
                 <th />
-                <th> Score</th>
-                <th> </th>
-                <th> Away Team</th>
+                <th>Score</th>
+                <th />
+                <th>Away Team</th>
               </tr>
               {this.state.fixtures.matches.map((fixture, i) => {
                 const relevantResult = this.state.results.find(
@@ -85,31 +85,41 @@ class Fixtures extends React.Component {
                 );
 
                 return (
-                  <tr key={i}>
-                    <td>{fixture.homeTeam.name}</td>
-                    <td>{relevantResult ? relevantResult.home : 0}</td>
-                    <td> : </td>
-                    <td>{relevantResult ? relevantResult.away : 0}</td>
-                    <td>{fixture.awayTeam.name}</td>
+                  <tr key={i} className="fixture--table-results">
+                    <td className="fixture--table-team-name">
+                      {fixture.homeTeam.name}
+                    </td>
+                    <td className="fixture--table-score">
+                      {relevantResult ? relevantResult.home : 0}
+                    </td>
+                    <td className="fixture-colon"> : </td>
+                    <td className="fixture--table-score">
+                      {relevantResult ? relevantResult.away : 0}
+                    </td>
+                    <td className="fixture--table-team-name">
+                      {fixture.awayTeam.name}
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
           <h2>Leaderboard</h2>
-          <table>
-            <tbody>
-              <tr>
+          <table className="form-container">
+            <tbody className="fixture-list__current-scores">
+              <tr className="fixture--table-header">
                 <th> User</th>
                 <th />
                 <th> Correct guesses</th>
               </tr>
               {leaders.map((leader, i) => {
                 return (
-                  <tr key={i}>
-                    <td>{leader.user}</td>
+                  <tr key={i} className="fixture--table-results">
+                    <td className="fixture--table-team-name">{leader.user}</td>
                     <td />
-                    <td>{leader.correctCount}</td>
+                    <td className="fixture--table-score">
+                      {leader.correctCount}
+                    </td>
                   </tr>
                 );
               })}
