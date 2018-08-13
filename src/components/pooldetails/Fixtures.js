@@ -1,7 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
 import Header from "../header/Header";
-import Fixture from "./Fixture";
 import { runInThisContext } from "vm";
 
 class Fixtures extends React.Component {
@@ -14,7 +13,6 @@ class Fixtures extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
     fetch(
       `http://api.football-data.org/v2/competitions/2021/matches?matchday=${
         this.props.pool.match_week
@@ -46,7 +44,6 @@ class Fixtures extends React.Component {
   }
 
   render() {
-    // if (this.state.fixtures) {
     var leaders = [];
 
     if (this.state.bets) {

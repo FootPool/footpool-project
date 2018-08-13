@@ -42,7 +42,7 @@ app.use(
 );
 ////GET MATCH_ID FROM DATABASE
 db.many(
-  `SELECT distinct(match_id), id, match_id, home_team, away_team FROM game WHERE pool_id = 11`
+  `SELECT distinct(match_id), id, match_id, home_team, away_team FROM game WHERE pool_id = 144`
 )
   .then(data => {
     // console.log(data);
@@ -62,6 +62,7 @@ let scores = {};
 
 ////CREATE FIXTURE OBJECT
 function createFixtureObject(matches) {
+  console.log(matches);
   scores = matches.map(match => {
     // console.log(item.match_id);
     return {
@@ -163,23 +164,25 @@ function runGame(gameId) {
       // } else {
       //   status = "HALF-TIME";
     }
+    console.log("count:-", counter);
     counter++;
     if (counter > 100) {
       clearInterval(interval);
       console.log("GAME COMPLETE", scores);
       ////UPDATING THE FINAL SCORE TO DATABASE
       scores.forEach(score => {
+        console.log("score:", score);
         let outcome = "";
         if (score.home > score.away) {
-          outcome = "home_team";
+          outcome = "HOME_TEAM";
         } else if (score.home < score.away) {
-          outcome = "away_team";
+          outcome = "AWAY_TEAM";
         } else {
           outcome = "DRAW";
         }
         db.none(
           `UPDATE game SET home_score = $1, away_score = $2, status = $3, winner = $4 WHERE match_id = $5`,
-          [score.home, score.away, "completed", outcome, score.gameId]
+          [score.home, score.away, "completed", outcome, score.matchId]
         )
           .then(function() {
             counter = 0;
@@ -214,13 +217,13 @@ function socketConnection() {
 function getBets() {
   return db
     .many(
-      `SELECT user_id, game_id, bet, fpuser.username, game.* FROM bet 
-                  INNER JOIN fpuser on fpuser.id = bet.user_id
-                  INNER JOIN game on game.id = bet.game_id
-                  WHERE bet.pool_id = 144`
+      `SELECT bet.user_id, game.match_id, bet.bet, fpuser.username, game.winner FROM bet 
+      INNER JOIN fpuser on fpuser.id = bet.user_id
+      INNER JOIN game on game.match_id = bet.match_id
+      WHERE bet.pool_id = 144`
     )
     .then(data => {
-      // console.log(data);
+      console.log("game data: ", data);
       return data;
     })
     .catch(err => console.log(err));
@@ -302,8 +305,9 @@ app.get("/admin", function(req, res) {
 
 app.post("/admin", function(req, res) {
   const { gameId } = req.body;
+  console.log("gameId", gameId);
   runGame(gameId);
-  // socketConnection();
+  socketConnection();
   // console.log(scores);
 });
 
@@ -311,13 +315,6 @@ app.post("/admin", function(req, res) {
 app.get("/*", isLoggedIn, function(req, res) {
   const user = req.user ? req.user : { id: null };
   const json = JSON.stringify(user);
-  res.render("index", { user, json });
-});
-
-app.get("/pooldetail", isLoggedIn, function(req, res) {
-  const user = req.user ? req.user : { id: null };
-  const json = JSON.stringify(user);
-  socketConnection();
   res.render("index", { user, json });
 });
 
