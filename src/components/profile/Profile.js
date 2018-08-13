@@ -58,15 +58,18 @@ class Profile extends React.Component {
             <ReactModal
               isOpen={this.state.showUsernameModal}
               contentLabel="Edit your username"
-              className="edit-modal"
+              className="modal-container"
             >
               <button onClick={this.handleCloseModal}>X</button>
-              <form className="modal-input">
-                <input placeholder="Update your username" />
+              <form className="modal-form">
+                <input
+                  placeholder="Update your username"
+                  className="modal-input"
+                />
                 <button
                   type="submit"
                   onClick={this.handleCloseModal}
-                  className="submit-button"
+                  className="button submit-button profile-button"
                 >
                   Submit
                 </button>
@@ -87,15 +90,18 @@ class Profile extends React.Component {
             <ReactModal
               isOpen={this.state.showEmailModal}
               contentLabel="Edit your Email"
-              className="edit-modal"
+              className="modal-container"
             >
               <button onClick={this.handleCloseModal}>X</button>
-              <form className="modal-input">
-                <input placeholder="Update your Email" />
+              <form className="modal-form">
+                <input
+                  placeholder="Update your Email"
+                  className="modal-input"
+                />
                 <button
                   type="submit"
                   onClick={this.handleCloseModal}
-                  className="submit-button"
+                  className="button submit-button profile-button"
                 >
                   Submit
                 </button>
@@ -116,15 +122,18 @@ class Profile extends React.Component {
             <ReactModal
               isOpen={this.state.showPasswordModal}
               contentLabel="Edit your password"
-              className="edit-modal"
+              className="modal-container"
             >
               <button onClick={this.handleCloseModal}>X</button>
-              <form className="modal-input">
-                <input placeholder="Update your password" />
+              <form className="modal-form">
+                <input
+                  placeholder="Update your password"
+                  className="modal-input"
+                />
                 <button
                   type="submit"
                   onClick={this.handleCloseModal}
-                  className="submit-button"
+                  className="button submit-button profile-button"
                 >
                   Submit
                 </button>

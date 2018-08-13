@@ -69,7 +69,9 @@ class Fixtures extends React.Component {
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
-          <h2>{this.props.pool.poolname}: Scores</h2>
+          <h3 className="createpool-title">
+            {this.props.pool.poolname}: Scores
+          </h3>
           <table>
             <tbody className="fixture-list__current-scores">
               <tr className="fixture--table-header">
