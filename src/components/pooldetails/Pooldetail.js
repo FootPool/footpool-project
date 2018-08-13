@@ -1,102 +1,48 @@
 import React from "react";
 import ReactModal from "react-modal";
 import Header from "../header/Header";
-import getFixtures from "../../services/getFixtures";
-
-const DRAW = 0;
+import Fixtures from "./fixtures";
+import { Redirect } from "react-router-dom";
 
 class Pooldetail extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       showModal: false,
       fixtures: undefined,
-      guesses: {},
-      user: "",
-      pool: "",
-      poolId: "",
-      isValid: false
+      guesses: {}
     };
 
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
-    this.sendBetsToDb = this.sendBetsToDb.bind(this);
-    this.validateUserInPool = this.validateUserInPool.bind(this);
-  }
-
-  validateUserInPool(user, poolName) {
-    fetch(`/isuserinpool/${user.id}/${poolName}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          isValid: data.hasBets
-        });
-      });
   }
 
   componentDidMount() {
-    this.setState(
-      {
-        user: this.props.user,
-        pool: this.props.pool
-      },
-      () => {
-        const user = this.state.user;
-        const pool = this.state.pool;
+    ReactModal.setAppElement("#root");
 
-        this.validateUserInPool(user, pool);
-      }
-    );
+    if (this.props.pool) {
+      this.props.validateUserInPool(this.props.user.id, this.props.pool.id);
+    }
   }
 
   handleOpenModal() {
-    getFixtures(this.props.week).then(data => {
-      this.setState(() => {
-        return {
-          fixtures: data
-        };
-      });
-    });
-    this.setState({ showModal: true });
+    this.props.getFixtures(this.props.pool.match_week);
   }
 
   handleCloseModal() {
-    const user = this.props.user;
-    const pool = this.props.pool;
+    const userId = this.props.user.id;
+    const poolId = this.props.pool.id;
     const guesses = this.state.guesses;
 
-    Object.keys(this.state.guesses).length !== 10
-      ? alert(
-          "Yellow Card! Place your bets on ALL of the games before submitting."
-        )
-      : this.sendBetsToDb(pool, user, guesses);
-  }
-
-  sendBetsToDb(pool, user, guesses) {
-    this.setState({ showModal: false });
-
-    fetch("/placebet", {
-      method: "POST",
-      body: JSON.stringify({ user, pool, guesses }),
-      credentials: "same-origin",
-      headers: {
-        "content-type": "application/json"
-      }
-    }).then(response => {
-      if (response.status === 200) {
-        this.setState({
-          isValid: true
-        });
-      } else {
-        alert("That hit the post (in a bad way).");
-      }
-    });
+    if (Object.keys(this.state.guesses).length !== 10) {
+      alert(
+        "Yellow Card! Place your bets on ALL of the games before submitting."
+      );
+    } else {
+      this.props.sendBetsToDb(poolId, userId, guesses);
+    }
   }
 
   handleSelect(matchId, choice) {
@@ -105,100 +51,102 @@ class Pooldetail extends React.Component {
   }
 
   render() {
-    if (this.state.isValid) {
+    if (!this.props.pool) {
+      return <Redirect to="/choosepool" />;
+    }
+
+    if (this.props.isValid) {
       return (
-        <div>YOU HAVE MADE YOUR GUESSES! 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥</div>
+        <Fixtures
+          user={this.props.user}
+          matches={this.props.matches}
+          pool={this.props.pool}
+        />
       );
     } else {
       return (
         <div>
           <Header title="Pool Details" />
           <div>
-            <div>Pool Members</div>
-            <div>Score</div>
+            <h2>
+              {this.props.poolId} {this.props.week}
+            </h2>
+            <h2>Pool Members</h2>
+            <p>Score</p>
             <div>
-              <form>
-                <div>
-                  <p>Member 1</p>
-                </div>
-              </form>
-              <button onClick={this.handleOpenModal}>Play Now!</button>
+              <button type="button" onClick={this.handleOpenModal}>
+                Play Now!
+              </button>
               <ReactModal
-                isOpen={this.state.showModal}
+                isOpen={this.props.showModal}
                 contentLabel="Guesses Submitted Successfully"
               >
                 <div>
-                  {this.state.fixtures && this.state.fixtures.matches
-                    ? this.state.fixtures.matches.map((match, index) => {
-                        const name = "match" + index;
-                        const selectedMatchValue = this.state.guesses[match.id];
-                        return (
-                          <form key={match.id} action="">
-                            <div className="row">
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-hw"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "HOME_TEAM")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-hw"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="HOME_TEAM"
-                                  name={name}
-                                  checked={selectedMatchValue === "HOME_TEAM"}
-                                />
-                                <span className="radiobtn__text">
-                                  {match.homeTeam.name}
-                                </span>
-                              </label>
+                  {this.props.matches.map((match, index) => {
+                    const name = "match" + index;
+                    const selectedMatchValue = this.state.guesses[match.id];
+                    return (
+                      <div key={match.id} className="row">
+                        <label
+                          className="radiobtn"
+                          htmlFor={match.id + "-hw"}
+                          onClick={() =>
+                            this.handleSelect(match.id, "HOME_TEAM")
+                          }
+                        >
+                          <input
+                            id={match.id + "-hw"}
+                            className="radiobtn__input"
+                            type="radio"
+                            value="HOME_TEAM"
+                            name={name}
+                            checked={selectedMatchValue === "HOME_TEAM"}
+                          />
+                          <span className="radiobtn__text">
+                            {match.homeTeam.name}
+                          </span>
+                        </label>
 
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-dr"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "DRAW")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-dr"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="DRAW"
-                                  name={name}
-                                  checked={selectedMatchValue === "DRAW"}
-                                />
-                                <span className="radiobtn__text">Draw</span>
-                              </label>
+                        <label
+                          className="radiobtn"
+                          htmlFor={match.id + "-dr"}
+                          onClick={() => this.handleSelect(match.id, "DRAW")}
+                        >
+                          <input
+                            id={match.id + "-dr"}
+                            className="radiobtn__input"
+                            type="radio"
+                            value="DRAW"
+                            name={name}
+                            checked={selectedMatchValue === "DRAW"}
+                          />
+                          <span className="radiobtn__text">Draw</span>
+                        </label>
 
-                              <label
-                                className="radiobtn"
-                                htmlFor={match.id + "-aw"}
-                                onClick={() =>
-                                  this.handleSelect(match.id, "AWAY_TEAM")
-                                }
-                              >
-                                <input
-                                  id={match.id + "-aw"}
-                                  className="radiobtn__input"
-                                  type="radio"
-                                  value="AWAY_TEAM"
-                                  name={name}
-                                  checked={selectedMatchValue === "AWAY_TEAM"}
-                                />
-                                <span className="radiobtn__text">
-                                  {match.awayTeam.name}
-                                </span>
-                              </label>
-                            </div>
-                          </form>
-                        );
-                      })
-                    : null}
+                        <label
+                          className="radiobtn"
+                          htmlFor={match.id + "-aw"}
+                          onClick={() =>
+                            this.handleSelect(match.id, "AWAY_TEAM")
+                          }
+                        >
+                          <input
+                            id={match.id + "-aw"}
+                            className="radiobtn__input"
+                            type="radio"
+                            value="AWAY_TEAM"
+                            name={name}
+                            checked={selectedMatchValue === "AWAY_TEAM"}
+                          />
+                          <span className="radiobtn__text">
+                            {match.awayTeam.name}
+                          </span>
+                        </label>
+                      </div>
+                    );
+                  })}
+                  <button onClick={this.handleCloseModal}>Play</button>
                 </div>
-                <button onClick={this.handleCloseModal}>Play</button>
               </ReactModal>
             </div>
           </div>
@@ -209,49 +157,3 @@ class Pooldetail extends React.Component {
 }
 
 export default Pooldetail;
-
-// const Checkbox = (type, name, matchId, teamId, teamName, checked) => {
-//   const id = matchId + "-" + type;
-//   return (
-//     <label
-//       className="radiobtn"
-//       htmlFor={id}
-//       onClick={() => this.handleSelect(matchId, teamId)}
-//     >
-//       <input
-//         id={id}
-//         className="radiobtn__input"
-//         type="radio"
-//         value={teamId}
-//         name={name}
-//         checked={checked}
-//       />
-//       <span className="radiobtn__text">{teamName}</span>
-//     </label>
-//   );
-// };
-
-// <Checkbox
-//   type="home"
-//   name={name}
-//   matchId={match.id}
-//   teamId={match.homeTeam.id}
-//   teamName={match.homeTeam.name}
-//   checked={selectedMatchValue === match.homeTeam.id}
-// />
-// <Checkbox
-//   type="home"
-//   name={name}
-//   matchId={match.id}
-//   teamId={DRAW}
-//   teamName="Draw"
-//   checked={selectedMatchValue === DRAW}
-// />
-// <Checkbox
-//   type="home"
-//   name={name}
-//   matchId={match.id}
-//   teamId={match.awayTeam.id}
-//   teamName={match.awayTeam.name}
-//   checked={selectedMatchValue === match.awayTeam.id}
-// />

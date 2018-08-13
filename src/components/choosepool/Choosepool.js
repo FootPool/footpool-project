@@ -1,10 +1,14 @@
 import React from "react";
 import Header from "../header/Header";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 class Choosepool extends React.Component {
-  constructor() {
-    super();
+  componentDidMount() {
+    this.props.fetchPools();
+  }
+
+  selectPool(pool) {
+    this.props.joinPool(pool);
   }
 
   render() {
@@ -16,22 +20,33 @@ class Choosepool extends React.Component {
           <h3 className="choosepool--title">Your pools</h3>
 
           <div className="choosepool--pool-list">
-            <p className="choosepool--pool-item">Pool 1</p>
-            <p className="choosepool--pool-item">Pool 2</p>
-            <p className="choosepool--pool-item">Pool 3</p>
-            <p className="choosepool--pool-item">Pool 4</p>
-            <p className="choosepool--pool-item">Pool 5</p>
+            {this.props.pools.map(pool => {
+              return (
+                <div
+                  key={pool.id}
+                  week={pool.match_week}
+                  className="choosepool--pool-item"
+                >
+                  <h3>{pool.poolname}</h3>
+                  <Link
+                    to={{
+                      pathname: "/pooldetail",
+                      state: {
+                        poolId: pool.id
+                      }
+                    }}
+                  >
+                    JOIN POOL
+                  </Link>
+                </div>
+              );
+            })}
           </div>
 
           <div className="choosepool--option-buttons-container">
             <Link to="/createpool">
               <button type="button" className="choosepool--option-button">
                 Create Pool
-              </button>
-            </Link>
-            <Link to="/joinpool">
-              <button type="button" className="choosepool--option-button">
-                Join Pool
               </button>
             </Link>
           </div>

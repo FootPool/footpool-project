@@ -10,12 +10,7 @@ function Footer() {
           <h4 className="footer--nav-title">Home</h4>
         </Link>
       </div>
-      <div className="footer--nav-item">
-        <Link to="/fixtures">
-          <img src="/static/images/fixtures.svg" className="footer--nav-icon" />
-          <h4 className="footer--nav-title">Fixtures</h4>
-        </Link>
-      </div>
+
       <div className="footer--nav-item">
         <Link to="/profile">
           <img src="/static/images/profile.svg" className="footer--nav-icon" />

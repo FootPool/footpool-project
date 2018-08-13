@@ -47,7 +47,7 @@ class Profile extends React.Component {
             className="profile-user-option--edit"
             onClick={this.handleOpenUsernameModal}
           >
-            Username
+            Username: {this.props.user.username}
             <img
               src="/static/images/edit-button.png"
               className="profile--edit-icon"
@@ -76,7 +76,7 @@ class Profile extends React.Component {
             className="profile-user-option--edit"
             onClick={this.handleOpenEmailModal}
           >
-            Email Address
+            E-mail: {this.props.user.email}
             <img
               src="/static/images/edit-button.png"
               className="profile--edit-icon"

@@ -14,11 +14,6 @@ class Createpool extends React.Component {
     };
 
     this.validatePool = this.validatePool.bind(this);
-    this.addNewPool = this.addNewPool.bind(this);
-  }
-
-  poolDetailsReceiver(poolId, pool, week) {
-    this.props.receivePoolDetails(poolId, pool, week);
   }
 
   validatePool(event) {
@@ -27,47 +22,32 @@ class Createpool extends React.Component {
     const poolName = document.querySelector("#pool-name").value;
     const matchWeek = document.querySelector("#match-week").value;
 
-    poolName === "" || matchWeek === undefined
-      ? alert(
-          "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
-        )
-      : this.addNewPool(poolName, matchWeek);
+    if (poolName === null || matchWeek === undefined) {
+      alert(
+        "DISSENT! Fill out the pool name AND the match week or you're getting sent off!"
+      );
+    } else {
+      this.props.addNewPool(poolName, matchWeek);
+      this.setState({ week: matchWeek });
+    }
   }
 
-  addNewPool(poolName, matchWeek) {
-    this.setState({ poolSaving: true });
-
-    fetch("/pool", {
-      method: "POST",
-      body: JSON.stringify({ poolName, matchWeek }),
-      credentials: "same-origin",
-      headers: {
-        "content-type": "application/json"
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          alert("Sorry, your pool was offside. Try again.");
-        }
-      })
-      .then(data => {
-        this.setState(
-          {
-            poolSaved: true,
-            poolName,
-            matchWeek,
-            poolId: data.poolId
-          },
-          () => this.poolDetailsReceiver(this.state.poolId, poolName, matchWeek)
-        );
-      })
-      .catch(error => alert("Sorry, your pool was offside. Try again."));
+  componentWillUnmount() {
+    this.props.resetCreatePoolState();
   }
 
   render() {
-    if (this.state.poolSaved) return <Redirect to="/pooldetail" />;
+    if (this.props.poolSaved) {
+      console.log("lastPoolId", this.props.lastPoolId);
+      return (
+        <Redirect
+          to={{
+            pathname: "/pooldetail",
+            state: { poolId: this.props.lastPoolId }
+          }}
+        />
+      );
+    }
 
     return (
       <div className="createpool--container">
@@ -76,7 +56,14 @@ class Createpool extends React.Component {
         <div>
           <form onSubmit={this.validatePool}>
             <input id="pool-name" type="text" placeholder="Pool name" />
-            <input id="match-week" type="text" placeholder="Starting week" />
+            <input
+              id="match-week"
+              type="number"
+              step="1"
+              min="1"
+              max="36"
+              placeholder="Starting week"
+            />
 
             <button type="submit" className="submit-button">
               Submit Pool

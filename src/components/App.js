@@ -1,64 +1,33 @@
 import React from "react";
-import Profile from "./profile/Profile";
+import ProfileContainer from "../containers/ProfileContainer";
 import Footer from "./footer/Footer";
-import Fixtures from "./fixtures/Fixtures";
-import Choosepool from "./choosepool/Choosepool";
-import Createpool from "./createpool/Createpool";
-import PlaceYourGuess from "./placeyourguess/PlaceYourGuess";
-import Pool from "./pool/Pool";
-import Pooldetail from "./pooldetails/Pooldetail";
-import { Switch, Route } from "react-router-dom";
+import ChoosePoolContainer from "../containers/ChoosePoolContainer";
+import CreatePoolContainer from "../containers/CreatePoolContainer";
+import PoolDetailContainer from "../containers/PoolDetailContainer";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import "../../static/styles/style.scss";
 
 class App extends React.Component {
   constructor() {
     super();
-
-    this.state = {
-      pool: "",
-      week: "",
-      poolId: "",
-      user: window.user
-    };
-
-    this.receivePoolDetails = this.receivePoolDetails.bind(this);
   }
 
-  receivePoolDetails(poolId, pool, week) {
-    this.setState({
-      poolId,
-      pool,
-      week
-    });
+  componentDidMount() {
+    const el = document.querySelector("#user");
+    const { user } = JSON.parse(el.textContent);
+    this.setState({ user });
   }
 
   render() {
     return (
       <div>
         <Switch>
-          <Route path="/choosepool" render={() => <Choosepool />} />
-          <Route
-            path="/createpool"
-            render={() => (
-              <Createpool receivePoolDetails={this.receivePoolDetails} />
-            )}
-          />
-          <Route path="/joinpool" render={() => <Pool />} />
-          <Route
-            path="/pooldetail"
-            render={() => (
-              <Pooldetail
-                pool={this.state.pool}
-                week={this.state.week}
-                user={this.state.user}
-                poolId={this.state.poolId}
-              />
-            )}
-          />
-          <Route path="/profile" render={() => <Profile />} />
-          <Route path="/fixtures" render={() => <Fixtures />} />
-          <Route path="/placeyourguess" render={() => <PlaceYourGuess />} />
+          <Redirect exact path="/index" to="/choosepool" />
+          <Route path="/choosepool" component={ChoosePoolContainer} />
+          <Route path="/createpool" component={CreatePoolContainer} />
+          <Route path="/pooldetail" component={PoolDetailContainer} />
+          <Route path="/profile" component={ProfileContainer} />
         </Switch>
         <Footer />
       </div>
