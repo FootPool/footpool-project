@@ -1,6 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
 import Header from "../header/Header";
+import Fixtures from "./fixtures";
 import { Redirect } from "react-router-dom";
 
 class Pooldetail extends React.Component {
@@ -56,12 +57,14 @@ class Pooldetail extends React.Component {
 
     if (this.props.isValid) {
       return (
-        // Liveresults.js
-        <div>YOU HAVE MADE YOUR GUESSES! 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥 🔥</div>
+        <Fixtures
+          user={this.props.user}
+          matches={this.props.matches}
+          pool={this.props.pool}
+        />
       );
     } else {
       return (
-        // Placebets.js
         <div>
           <Header title="Pool Details" />
           <div>

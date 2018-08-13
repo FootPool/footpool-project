@@ -3,7 +3,6 @@ import user from "./user";
 import pools from "./pools";
 import poolDetails from "./poolDetails";
 import profileReducer from "./profileReducer";
-import fixturesReducer from "./fixturesReducer";
 import createPoolReducer from "./createPoolReducer";
 
 export default combineReducers({
@@ -11,6 +10,5 @@ export default combineReducers({
   pools,
   poolDetails,
   profileReducer,
-  fixturesReducer,
   createPoolReducer
 });

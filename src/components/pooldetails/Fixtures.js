@@ -2,6 +2,7 @@ import React from "react";
 import io from "socket.io-client";
 import Header from "../header/Header";
 import Fixture from "./Fixture";
+import { runInThisContext } from "vm";
 
 class Fixtures extends React.Component {
   constructor() {
@@ -13,10 +14,12 @@ class Fixtures extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     fetch(
-      "http://api.football-data.org/v2/competitions/2021/matches?matchday=1",
+      `http://api.football-data.org/v2/competitions/2021/matches?matchday=${
+        this.props.pool.match_week
+      }`,
       {
-        method: "GET",
         headers: {
           "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
         }
@@ -66,7 +69,7 @@ class Fixtures extends React.Component {
       <div className="fixtures--container">
         <Header title="Fixtures" />
         <div className="fixtures--fixture-list">
-          <h2>Fixture List</h2>
+          <h2>{this.props.pool.poolname}: Fixture List</h2>
           <table>
             <tbody>
               <tr>

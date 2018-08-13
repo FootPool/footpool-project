@@ -1,7 +1,6 @@
 import React from "react";
 import ProfileContainer from "../containers/ProfileContainer";
 import Footer from "./footer/Footer";
-import FixturesContainer from "../containers/FixturesContainer";
 import ChoosePoolContainer from "../containers/ChoosePoolContainer";
 import CreatePoolContainer from "../containers/CreatePoolContainer";
 import PoolDetailContainer from "../containers/PoolDetailContainer";
@@ -29,7 +28,6 @@ class App extends React.Component {
           <Route path="/createpool" component={CreatePoolContainer} />
           <Route path="/pooldetail" component={PoolDetailContainer} />
           <Route path="/profile" component={ProfileContainer} />
-          <Route path="/fixtures" component={FixturesContainer} />
         </Switch>
         <Footer />
       </div>
