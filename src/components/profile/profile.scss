@@ -5,14 +5,31 @@
   padding-left: 2rem;
   padding-right: 2rem;
   height: 100vh;
+  background-image: url("/static/images/football-pitch.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .profile--user-option {
-  border: 1px solid grey;
-  padding: 20px 0px;
+  margin-bottom: 1rem;
+  border: 1px solid lightgrey;
+  padding: 15px 0px;
+  border-radius: 9px;
+  background-color: gainsboro;
+  font-family: var(--body);
+  color: var(--alt-font-color);
 }
 
 .profile--edit-icon {
   height: 0.5rem;
   width: auto;
+  color: var(--tertiary-color);
+}
+
+.profile--log-out {
+  color: var(--font-color);
+}
+
+.profile-button {
+  margin: 0;
 }

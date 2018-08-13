@@ -6,8 +6,8 @@ function Footer() {
     <div className="footer--container">
       <div className="footer--nav-item">
         <Link to="/choosepool">
-          <img src="/static/images/home.svg" className="footer--nav-icon" />
-          <h4 className="footer--nav-title">Home</h4>
+          <img src="/static/images/fixtures.svg" className="footer--nav-icon" />
+          <h4 className="footer--nav-title">Play</h4>
         </Link>
       </div>
 

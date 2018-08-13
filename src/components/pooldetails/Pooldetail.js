@@ -65,23 +65,28 @@ class Pooldetail extends React.Component {
       );
     } else {
       return (
-        <div>
+        <div className="choosepool--container">
           <Header title="Pool Details" />
-          <div>
-            <h2>
+          <div className="form-container">
+            <h2 className="choosepool--title">
               {this.props.poolId} {this.props.week}
             </h2>
-            <h2>Pool Members</h2>
+            <h2 className="choosepool--title">Pool Members</h2>
             <p>Score</p>
-            <div>
-              <button type="button" onClick={this.handleOpenModal}>
+            <div className="choosepool--option-buttons-container">
+              <button
+                type="button"
+                onClick={this.handleOpenModal}
+                className="button option-button"
+              >
                 Play Now!
               </button>
               <ReactModal
                 isOpen={this.props.showModal}
                 contentLabel="Guesses Submitted Successfully"
+                className="modal-container"
               >
-                <div>
+                <div className="modal-form">
                   {this.props.matches.map((match, index) => {
                     const name = "match" + index;
                     const selectedMatchValue = this.state.guesses[match.id];
@@ -145,7 +150,12 @@ class Pooldetail extends React.Component {
                       </div>
                     );
                   })}
-                  <button onClick={this.handleCloseModal}>Play</button>
+                  <button
+                    onClick={this.handleCloseModal}
+                    className="button submit-button"
+                  >
+                    Play
+                  </button>
                 </div>
               </ReactModal>
             </div>

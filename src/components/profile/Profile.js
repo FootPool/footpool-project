@@ -42,98 +42,110 @@ class Profile extends React.Component {
     return (
       <div className="profile--container">
         <Header title="Profile" />
-        <div className="profile--user-option">
-          <a
-            className="profile-user-option--edit"
-            onClick={this.handleOpenUsernameModal}
-          >
-            Username: {this.props.user.username}
-            <img
-              src="/static/images/edit-button.png"
-              className="profile--edit-icon"
-            />
+        <div className="form-container">
+          <h3 className="createpool-title">Change your details</h3>
+          <div className="profile--user-option">
+            <a
+              className="profile-user-option--edit"
+              onClick={this.handleOpenUsernameModal}
+            >
+              Username: {this.props.user.username}
+              <img
+                src="/static/images/edit-button.png"
+                className="profile--edit-icon"
+              />
+            </a>
+            <ReactModal
+              isOpen={this.state.showUsernameModal}
+              contentLabel="Edit your username"
+              className="modal-container"
+            >
+              <button onClick={this.handleCloseModal}>X</button>
+              <form className="modal-form">
+                <input
+                  placeholder="Update your username"
+                  className="modal-input"
+                />
+                <button
+                  type="submit"
+                  onClick={this.handleCloseModal}
+                  className="button submit-button profile-button"
+                >
+                  Submit
+                </button>
+              </form>
+            </ReactModal>
+          </div>
+          <div className="profile--user-option">
+            <a
+              className="profile-user-option--edit"
+              onClick={this.handleOpenEmailModal}
+            >
+              E-mail: {this.props.user.email}
+              <img
+                src="/static/images/edit-button.png"
+                className="profile--edit-icon"
+              />
+            </a>
+            <ReactModal
+              isOpen={this.state.showEmailModal}
+              contentLabel="Edit your Email"
+              className="modal-container"
+            >
+              <button onClick={this.handleCloseModal}>X</button>
+              <form className="modal-form">
+                <input
+                  placeholder="Update your Email"
+                  className="modal-input"
+                />
+                <button
+                  type="submit"
+                  onClick={this.handleCloseModal}
+                  className="button submit-button profile-button"
+                >
+                  Submit
+                </button>
+              </form>
+            </ReactModal>
+          </div>
+          <div className="profile--user-option">
+            <a
+              className="profile-user-option--edit"
+              onClick={this.handleOpenPasswordModal}
+            >
+              Password
+              <img
+                src="/static/images/edit-button.png"
+                className="profile--edit-icon"
+              />
+            </a>
+            <ReactModal
+              isOpen={this.state.showPasswordModal}
+              contentLabel="Edit your password"
+              className="modal-container"
+            >
+              <button onClick={this.handleCloseModal}>X</button>
+              <form className="modal-form">
+                <input
+                  placeholder="Update your password"
+                  className="modal-input"
+                />
+                <button
+                  type="submit"
+                  onClick={this.handleCloseModal}
+                  className="button submit-button profile-button"
+                >
+                  Submit
+                </button>
+              </form>
+            </ReactModal>
+          </div>
+          <a href="/logout" id="logout-btn" className="profile--log-out">
+            <p>
+              <u>Logout</u>
+            </p>
           </a>
-          <ReactModal
-            isOpen={this.state.showUsernameModal}
-            contentLabel="Edit your username"
-            className="edit-modal"
-          >
-            <button onClick={this.handleCloseModal}>X</button>
-            <form className="modal-input">
-              <input placeholder="Update your username" />
-              <button
-                type="submit"
-                onClick={this.handleCloseModal}
-                className="submit-button"
-              >
-                Submit
-              </button>
-            </form>
-          </ReactModal>
         </div>
-        <div className="profile--user-option">
-          <a
-            className="profile-user-option--edit"
-            onClick={this.handleOpenEmailModal}
-          >
-            E-mail: {this.props.user.email}
-            <img
-              src="/static/images/edit-button.png"
-              className="profile--edit-icon"
-            />
-          </a>
-          <ReactModal
-            isOpen={this.state.showEmailModal}
-            contentLabel="Edit your Email"
-            className="edit-modal"
-          >
-            <button onClick={this.handleCloseModal}>X</button>
-            <form className="modal-input">
-              <input placeholder="Update your Email" />
-              <button
-                type="submit"
-                onClick={this.handleCloseModal}
-                className="submit-button"
-              >
-                Submit
-              </button>
-            </form>
-          </ReactModal>
-        </div>
-        <div className="profile--user-option">
-          <a
-            className="profile-user-option--edit"
-            onClick={this.handleOpenPasswordModal}
-          >
-            Password
-            <img
-              src="/static/images/edit-button.png"
-              className="profile--edit-icon"
-            />
-          </a>
-          <ReactModal
-            isOpen={this.state.showPasswordModal}
-            contentLabel="Edit your password"
-            className="edit-modal"
-          >
-            <button onClick={this.handleCloseModal}>X</button>
-            <form className="modal-input">
-              <input placeholder="Update your password" />
-              <button
-                type="submit"
-                onClick={this.handleCloseModal}
-                className="submit-button"
-              >
-                Submit
-              </button>
-            </form>
-          </ReactModal>
-        </div>
-        <a href="/logout" id="logout-btn" className="profile--log-out">
-          <p>
-            <u>Logout</u>
-          </p>
-        </a>
       </div>
     );
   }

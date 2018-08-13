@@ -1,6 +1,6 @@
 // TITLES
-@import url("https://fonts.googleapis.com/css?family=Monoton");
-//font-family:  'Monoton', cursive;
+@import url("https://fonts.googleapis.com/css?family=Ubuntu");
+//font-family:  'Ubuntu', sans-serif;
 
 //SUBTITLES
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:600i");
@@ -9,3 +9,9 @@
 //BODY TEXT
 @import url("https://fonts.googleapis.com/css?family=Roboto:300");
 //font-family: 'Roboto', sans-serif;
+
+:root {
+  --title: "Ubuntu", sans-serif;
+  --subtitle: "Open Sans", sans-serif;
+  --body: "Roboto", sans-serif;
+}
