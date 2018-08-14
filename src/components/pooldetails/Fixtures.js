@@ -72,7 +72,28 @@ class Fixtures extends React.Component {
           <h3 className="createpool-title">
             {this.props.pool.poolname}: Scores
           </h3>
-          <table>
+          <h2>Leaderboard</h2>
+          <table className="form-container">
+            <tbody className="fixture-list__current-scores">
+              <tr className="fixture--table-header">
+                <th> User</th>
+                <th />
+                <th> Correct guesses</th>
+              </tr>
+              {leaders.map((leader, i) => {
+                return (
+                  <tr key={i} className="fixture--table-results">
+                    <td className="fixture--table-team-name">{leader.user}</td>
+                    <td />
+                    <td className="fixture--table-score">
+                      {leader.correctCount}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          {/* <table>
             <tbody className="fixture-list__current-scores">
               <tr className="fixture--table-header">
                 <th>Home Team</th>
@@ -105,28 +126,27 @@ class Fixtures extends React.Component {
                 );
               })}
             </tbody>
-          </table>
-          <h2>Leaderboard</h2>
-          <table className="form-container">
-            <tbody className="fixture-list__current-scores">
-              <tr className="fixture--table-header">
-                <th> User</th>
-                <th />
-                <th> Correct guesses</th>
-              </tr>
-              {leaders.map((leader, i) => {
-                return (
-                  <tr key={i} className="fixture--table-results">
-                    <td className="fixture--table-team-name">{leader.user}</td>
-                    <td />
-                    <td className="fixture--table-score">
-                      {leader.correctCount}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          </table> */}
+        </div>
+        <div className="ticker-wrap">
+          <div className="ticker">
+            {this.state.fixtures.matches.map((fixture, i) => {
+              console.log(fixture);
+              const relevantResult = this.state.results.find(
+                result => result.matchId === fixture.id
+              );
+              return (
+                <div key={i} className="ticker__item">
+                  <p>
+                    {fixture.homeTeam.name + "  "}
+                    {relevantResult ? relevantResult.home : 0}:
+                    {relevantResult ? relevantResult.away : 0}
+                    {"  " + fixture.awayTeam.name}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
