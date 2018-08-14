@@ -40,31 +40,23 @@ app.use(
     saveUninitialized: false
   })
 );
-////GET MATCH_ID FROM DATABASE
-db.many(
-  `SELECT distinct(match_id), id, match_id, home_team, away_team FROM game WHERE pool_id = 144`
-)
-  .then(data => {
-    // console.log(data);
-    createFixtureObject(data);
-    // console.log(scores);
 
-    // console.log(gameIds);
-    // console.log(scores[gameIds[1]]);
-  })
-  .catch(error => console.log(error.message));
+let client;
+io.on("connection", socket => {
+  client = socket;
+});
+
+// socketConnection();
+
+////GET MATCH_ID FROM DATABASE
 
 ////GLOBAL DATA FOR SCORE GENERATOR
-let counter = 0;
 let homeTeam = 0;
 let awayTeam = 0;
-let scores = {};
 
 ////CREATE FIXTURE OBJECT
 function createFixtureObject(matches) {
-  console.log(matches);
-  scores = matches.map(match => {
-    // console.log(item.match_id);
+  const scores = matches.map(match => {
     return {
       gameId: match.id,
       matchId: match.match_id,
@@ -74,6 +66,8 @@ function createFixtureObject(matches) {
       away: 0
     };
   });
+
+  return scores;
 }
 
 ////CREATE RANDOM NUMBER
@@ -87,7 +81,7 @@ function updateScore(scores) {
   const gameIds = scores.map(score => score.gameId);
   // console.log(gameIds);
   ////GENERATOR SCORE
-  let randomNumber = randomInt(1, 90);
+  let randomNumber = randomInt(1, 150);
 
   if (randomNumber < 3) {
     scores[1].home += 1;
@@ -95,75 +89,76 @@ function updateScore(scores) {
   } else if (randomNumber >= 3 && randomNumber < 5) {
     scores[1].away += 1;
     console.log("Game 1 AWAY", scores[1].away);
-  } else if (randomNumber >= 6 && randomNumber < 9) {
+  } else if (randomNumber >= 6 && randomNumber < 8) {
     scores[2].home += 1;
     console.log("Game 2 HOME", scores[2].home);
-  } else if (randomNumber >= 10 && randomNumber < 13) {
+  } else if (randomNumber >= 10 && randomNumber < 12) {
     scores[2].away += 1;
     console.log("Game 2 AWAY", scores[2].away);
-  } else if (randomNumber >= 14 && randomNumber < 17) {
+  } else if (randomNumber >= 14 && randomNumber < 16) {
     scores[3].home += 1;
     console.log("Game 2 HOME", scores[3].home);
-  } else if (randomNumber > 18 && randomNumber < 21) {
+  } else if (randomNumber >= 18 && randomNumber < 20) {
     scores[3].away += 1;
     console.log("Game 2 AWAY", scores[3].away);
-  } else if (randomNumber >= 22 && randomNumber < 25) {
+  } else if (randomNumber >= 22 && randomNumber < 24) {
     scores[4].home += 1;
     console.log("Game 2 HOME", scores[4].home);
-  } else if (randomNumber > 26 && randomNumber < 29) {
+  } else if (randomNumber >= 26 && randomNumber < 28) {
     scores[4].away += 1;
     console.log("Game 2 AWAY", scores[4].away);
-  } else if (randomNumber >= 30 && randomNumber < 33) {
+  } else if (randomNumber >= 30 && randomNumber < 32) {
     scores[5].home += 1;
     console.log("Game 2 HOME", scores[5].home);
-  } else if (randomNumber >= 34 && randomNumber < 37) {
+  } else if (randomNumber >= 34 && randomNumber < 36) {
     scores[5].away += 1;
     console.log("Game 2 AWAY", scores[5].away);
-  } else if (randomNumber >= 38 && randomNumber < 41) {
+  } else if (randomNumber >= 38 && randomNumber < 40) {
     scores[6].home += 1;
     console.log("Game 2 HOME", scores[6].home);
-  } else if (randomNumber > 11 && randomNumber < 13) {
+  } else if (randomNumber >= 41 && randomNumber < 43) {
     scores[6].away += 1;
     console.log("Game 2 AWAY", scores[6].away);
-  } else if (randomNumber > 85) {
+  } else if (randomNumber >= 44 && randomNumber < 46) {
     scores[7].home += 1;
     console.log("Game 2 HOME", scores[7].home);
-  } else if (randomNumber > 11 && randomNumber < 13) {
+  } else if (randomNumber >= 46 && randomNumber < 48) {
     scores[7].away += 1;
     console.log("Game 2 AWAY", scores[7].away);
-  } else if (randomNumber > 11 && randomNumber < 13) {
+  } else if (randomNumber >= 88 && randomNumber < 90) {
     scores[8].away += 1;
     console.log("Game 2 AWAY", scores[8].away);
-  } else if (randomNumber > 85) {
+  } else if (randomNumber >= 48 && randomNumber < 50) {
     scores[8].home += 1;
     console.log("Game 2 HOME", scores[8].home);
-  } else if (randomNumber > 11 && randomNumber < 13) {
+  } else if (randomNumber >= 50 && randomNumber < 52) {
     scores[9].away += 1;
     console.log("Game 2 AWAY", scores[9].away);
-  } else if (randomNumber > 85) {
+  } else if (randomNumber >= 52 && randomNumber < 54) {
     scores[9].home += 1;
     console.log("Game 2 HOME", scores[9].home);
-  } else if (randomNumber > 11 && randomNumber < 13) {
+  } else if (randomNumber >= 54 && randomNumber < 56) {
     scores[0].away += 1;
     console.log("Game 2 AWAY", scores[0].away);
-  } else if (randomNumber > 85) {
+  } else if (randomNumber >= 56 && randomNumber < 58) {
     scores[0].home += 1;
     console.log("Game 2 HOME", scores[0].home);
   } else {
     homeTeam = homeTeam;
     awayTeam = awayTeam;
   }
+  return scores;
 }
 
 ////STARTS THE GAME
-function runGame(gameId) {
+function runGame(bets, scores) {
+  let counter = 0;
   const interval = setInterval(function() {
     if (counter < 46 || counter > 55) {
       updateScore(scores);
-      //   status = "LIVE";
-      // } else {
-      //   status = "HALF-TIME";
+      client.emit("matchDetails", { scores, bets });
     }
+
     console.log("count:-", counter);
     counter++;
     if (counter > 100) {
@@ -185,7 +180,6 @@ function runGame(gameId) {
           [score.home, score.away, "completed", outcome, score.matchId]
         )
           .then(function() {
-            counter = 0;
             homeTeam = 0;
             awayTeam = 0;
           })
@@ -193,44 +187,6 @@ function runGame(gameId) {
       });
     }
   }, 100);
-}
-
-/////SOCKET CONNECTION
-function socketConnection() {
-  io.on("connection", socket => {
-    // let count = 0;
-    const repeater = setInterval(function() {
-      if (counter < 100) {
-        getBets().then(bets => {
-          socket.emit("matchDetails", { scores, bets });
-        });
-      } else {
-        clearInterval(repeater);
-      }
-      // count++;
-    }, 100);
-  });
-}
-
-///////GET BETS FROM DATABASE
-
-function getBets() {
-  return db
-    .many(
-      `SELECT bet.user_id, game.match_id, bet.bet, fpuser.username, game.winner FROM bet 
-      INNER JOIN fpuser on fpuser.id = bet.user_id
-      INNER JOIN game on game.match_id = bet.match_id
-      WHERE bet.pool_id = 144`
-    )
-    .then(data => {
-      console.log("game data: ", data);
-      return data;
-    })
-    .catch(err => console.log(err));
-  // console.log(scores);
-
-  // console.log(gameIds);
-  // console.log(scores[gameIds[1]]);
 }
 
 // AUTHENTICATION FUNCTIONS
@@ -304,11 +260,31 @@ app.get("/admin", function(req, res) {
 });
 
 app.post("/admin", function(req, res) {
-  const { gameId } = req.body;
-  console.log("gameId", gameId);
-  runGame(gameId);
-  socketConnection();
-  // console.log(scores);
+  const { poolId } = req.body;
+
+  let scores;
+
+  db.many(
+    `SELECT distinct(match_id), id, match_id, home_team, away_team FROM game 
+    WHERE pool_id = $1`,
+    [poolId]
+  )
+    .then(data => {
+      scores = createFixtureObject(data);
+    })
+    .then(() => {
+      return db.many(
+        `SELECT distinct(bet.user_id), bet.pool_id, game.match_id, bet.bet, fpuser.username, game.winner FROM bet, game, fpuser
+        WHERE fpuser.id=bet.user_id
+        AND game.match_id=bet.match_id
+        AND bet.pool_id = $1`,
+        [poolId]
+      );
+    })
+    .then(bets => {
+      runGame(bets, scores);
+    })
+    .catch(err => console.log(err));
 });
 
 // PROTECTED ROUTES

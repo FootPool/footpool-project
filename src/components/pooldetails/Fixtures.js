@@ -14,9 +14,7 @@ class Fixtures extends React.Component {
 
   componentDidMount() {
     fetch(
-      `http://api.football-data.org/v2/competitions/2021/matches?matchday=${
-        this.props.pool.match_week
-      }`,
+      `http://api.football-data.org/v2/competitions/2021/matches?matchday=2`,
       {
         headers: {
           "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
@@ -32,19 +30,18 @@ class Fixtures extends React.Component {
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
 
     const socket = io.connect("http://localhost:8080");
-    // socket.on("connect", data => {
-    //   socket.emit("join", "hello world from client");
-    // });
+
     socket.on("matchDetails", data => {
-      // console.log(data);
-      this.setState({ results: data.scores, bets: data.bets }, () =>
-        console.log("this is the data", data)
-      );
+      this.setState({ results: data.scores, bets: data.bets });
     });
   }
 
   render() {
-    var leaders = [];
+    console.log("bets: ", this.state.bets);
+    console.log("username:", this.props.user);
+    console.log("results: ", this.state.results);
+
+    let leaders = [];
 
     if (this.state.bets) {
       //gets unique usernames
@@ -54,14 +51,45 @@ class Fixtures extends React.Component {
 
       leaders = users.map(user => ({
         user,
-        correctCount: this.state.bets.filter(
-          bet => bet.username === user && bet.bet === bet.winner
-        ).length
+        correctCount: 0
       }));
       leaders = leaders.sort(
         (leader1, leader2) => leader2.correctCount - leader1.correctCount
       );
     }
+
+    // Working progress for counting correct bets
+
+    this.state.bets.foreach(function(bet) {
+      this.state.results.foreach(function(result) {
+        let correctBets = [];
+        if (
+          bet.matchId === result.matchId &&
+          bet.bet === "HOME_TEAM" &&
+          result.home > results.away
+        ) {
+          return {
+            ...correctBets,
+            username: bet.username,
+            counter: counter + 1
+          };
+        } else if (
+          bet.matchId === result.matchId &&
+          bet.bet === "AWAY_TEAM" &&
+          result.away > results.home
+        ) {
+          counter++;
+        } else if (
+          bet.matchId === result.matchId &&
+          bet.bet === "DRAW" &&
+          result.home === results.away
+        ) {
+          counter++;
+        }
+      });
+      return counter;
+    });
+
     return (
       <div className="fixtures--container">
         <Header title="Fixtures" />

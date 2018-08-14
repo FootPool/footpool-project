@@ -2,12 +2,12 @@ const admin = document.querySelector(".admin_form");
 admin.addEventListener("submit", function(event) {
   event.preventDefault();
 
-  const gameId = document.querySelector(".gameId").value;
+  const poolId = document.querySelector(".poolId").value;
 
   fetch("/admin", {
     method: "POST",
     body: JSON.stringify({
-      gameId
+      poolId
     }),
     credentials: "same-origin",
     headers: {
