@@ -30,24 +30,31 @@ $duration: 27s;
 }
 
 .ticker-wrap {
-  position: relative;
+  position: fixed;
   bottom: 0;
-  // width: 100%;
+  margin-bottom: 4rem;
+  // top: 18rem;
+  width: 100%;
   overflow: hidden;
   height: 2rem;
   background-color: rgb(65, 105, 225);
-  padding-bottom: 5rem;
-  padding-left: 100%;
-  margin: 0;
+  padding-bottom: 3rem;
+  padding-left: 0rem !important;
+  // padding-left: 100%;
+  // margin: 0;
   box-sizing: content-box;
   color: white;
+
+  .ticker-minutes-played {
+    text-align: center;
+  }
 
   .ticker {
     display: inline-block;
     height: 4rem;
-    line-height: 4rem;
+    // line-height: 4rem;
     white-space: nowrap;
-    padding-right: 100%;
+    // padding-right: 100%;
     box-sizing: content-box;
 
     -webkit-animation-iteration-count: infinite;

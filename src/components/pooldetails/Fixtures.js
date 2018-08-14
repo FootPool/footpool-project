@@ -9,7 +9,8 @@ class Fixtures extends React.Component {
     super();
     this.state = {
       results: [{}],
-      fixtures: { matches: [] }
+      fixtures: { matches: [] },
+      minutesPlayed: 0
     };
   }
 
@@ -39,13 +40,15 @@ class Fixtures extends React.Component {
     // });
     socket.on("matchDetails", data => {
       // console.log(data);
-      this.setState({ results: data.scores, bets: data.bets }, () =>
-        console.log("this is the data", data)
+      this.setState(
+        { results: data.scores, bets: data.bets, minutesPlayed: counter },
+        () => console.log("this is the data", data)
       );
     });
   }
 
   render() {
+    console.log("counter:", this.state.minutesPlayed);
     // if (this.state.fixtures) {
     var leaders = [];
 
@@ -129,6 +132,9 @@ class Fixtures extends React.Component {
           </table> */}
         </div>
         <div className="ticker-wrap">
+          <div className="ticker-minutes-played">
+            {this.state.minutesPlayed}"
+          </div>
           <div className="ticker">
             {this.state.fixtures.matches.map((fixture, i) => {
               console.log(fixture);
