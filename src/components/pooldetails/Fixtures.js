@@ -38,57 +38,47 @@ class Fixtures extends React.Component {
 
   render() {
     console.log("bets: ", this.state.bets);
-    console.log("username:", this.props.user);
     console.log("results: ", this.state.results);
 
     let leaders = [];
+    let userScores = {};
 
     if (this.state.bets) {
-      //gets unique usernames
-      var users = this.state.bets
-        .map(bet => bet.username)
-        .filter((value, index, self) => self.indexOf(value) === index);
+      this.state.bets.forEach(bet => {
+        const result = this.state.results.find(result => {
+          return result.matchId === bet.match_id;
+        });
+        if (bet.bet === "HOME_TEAM" && result.home > result.away) {
+          userScores = Object.assign({}, userScores, {
+            [bet.username]: userScores[bet.username]
+              ? userScores[bet.username] + 1
+              : 1
+          });
+        } else if (bet.bet === "AWAY_TEAM" && result.away > result.home) {
+          userScores = Object.assign({}, userScores, {
+            [bet.username]: userScores[bet.username]
+              ? userScores[bet.username] + 1
+              : 1
+          });
+        } else if (bet.bet === "DRAW" && result.home === result.away) {
+          userScores = Object.assign({}, userScores, {
+            [bet.username]: userScores[bet.username]
+              ? userScores[bet.username] + 1
+              : 1
+          });
+        }
+      });
 
-      leaders = users.map(user => ({
-        user,
-        correctCount: 0
-      }));
+      leaders = Object.entries(userScores).map(user =>
+        Object.assign({}, leaders, {
+          username: user[0],
+          correctCount: user[1]
+        })
+      );
       leaders = leaders.sort(
         (leader1, leader2) => leader2.correctCount - leader1.correctCount
       );
     }
-
-    // Working progress for counting correct bets
-
-    this.state.bets.foreach(function(bet) {
-      this.state.results.foreach(function(result) {
-        let correctBets = [];
-        if (
-          bet.matchId === result.matchId &&
-          bet.bet === "HOME_TEAM" &&
-          result.home > results.away
-        ) {
-          return {
-            ...correctBets,
-            username: bet.username,
-            counter: counter + 1
-          };
-        } else if (
-          bet.matchId === result.matchId &&
-          bet.bet === "AWAY_TEAM" &&
-          result.away > results.home
-        ) {
-          counter++;
-        } else if (
-          bet.matchId === result.matchId &&
-          bet.bet === "DRAW" &&
-          result.home === results.away
-        ) {
-          counter++;
-        }
-      });
-      return counter;
-    });
 
     return (
       <div className="fixtures--container">
@@ -132,7 +122,7 @@ class Fixtures extends React.Component {
               {leaders.map((leader, i) => {
                 return (
                   <tr key={i}>
-                    <td>{leader.user}</td>
+                    <td>{leader.username}</td>
                     <td />
                     <td>{leader.correctCount}</td>
                   </tr>
