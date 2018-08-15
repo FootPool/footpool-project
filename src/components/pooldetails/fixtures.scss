@@ -1,8 +1,6 @@
 .fixtures--container {
   display: flex;
   flex-direction: column;
-  padding-left: 2rem;
-  padding-right: 2rem;
   height: 100vh;
   background-image: url("/static/images/football-pitch.jpg");
   background-repeat: no-repeat;
@@ -13,6 +11,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
   color: var(--font-color);
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
 import Header from "../header/Header";
-import Fixture from "./Fixture";
 import { runInThisContext } from "vm";
 
 class Fixtures extends React.Component {
@@ -9,7 +8,8 @@ class Fixtures extends React.Component {
     super();
     this.state = {
       results: [{}],
-      fixtures: { matches: [] }
+      fixtures: { matches: [] },
+      minutesPlayed: 0
     };
   }
 
@@ -34,23 +34,19 @@ class Fixtures extends React.Component {
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
 
     const socket = io.connect("http://localhost:8080");
-    // socket.on("connect", data => {
-    //   socket.emit("join", "hello world from client");
-    // });
+
     socket.on("matchDetails", data => {
-      // console.log(data);
-      this.setState({ results: data.scores, bets: data.bets }, () =>
-        console.log("this is the data", data)
+      this.setState(
+        { results: data.scores, bets: data.bets, minutesPlayed: counter },
+        () => console.log("this is the data", data)
       );
     });
   }
 
   render() {
-    // if (this.state.fixtures) {
     var leaders = [];
 
     if (this.state.bets) {
-      //gets unique usernames
       var users = this.state.bets
         .map(bet => bet.username)
         .filter((value, index, self) => self.indexOf(value) === index);
@@ -72,40 +68,6 @@ class Fixtures extends React.Component {
           <h3 className="createpool-title">
             {this.props.pool.poolname}: Scores
           </h3>
-          <table>
-            <tbody className="fixture-list__current-scores">
-              <tr className="fixture--table-header">
-                <th>Home Team</th>
-                <th />
-                <th>Score</th>
-                <th />
-                <th>Away Team</th>
-              </tr>
-              {this.state.fixtures.matches.map((fixture, i) => {
-                const relevantResult = this.state.results.find(
-                  result => result.matchId === fixture.id
-                );
-
-                return (
-                  <tr key={i} className="fixture--table-results">
-                    <td className="fixture--table-team-name">
-                      {fixture.homeTeam.name}
-                    </td>
-                    <td className="fixture--table-score">
-                      {relevantResult ? relevantResult.home : 0}
-                    </td>
-                    <td className="fixture-colon"> : </td>
-                    <td className="fixture--table-score">
-                      {relevantResult ? relevantResult.away : 0}
-                    </td>
-                    <td className="fixture--table-team-name">
-                      {fixture.awayTeam.name}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
           <h2>Leaderboard</h2>
           <table className="form-container">
             <tbody className="fixture-list__current-scores">
@@ -128,10 +90,30 @@ class Fixtures extends React.Component {
             </tbody>
           </table>
         </div>
+        <div className="ticker-wrap">
+          <div className="ticker-minutes-played">
+            {this.state.minutesPlayed}"
+          </div>
+          <div className="ticker">
+            {this.state.fixtures.matches.map((fixture, i) => {
+              const relevantResult = this.state.results.find(
+                result => result.matchId === fixture.id
+              );
+              return (
+                <div key={i} className="ticker__item">
+                  <p>
+                    {fixture.homeTeam.name + "  "}
+                    {relevantResult ? relevantResult.home : 0}:
+                    {relevantResult ? relevantResult.away : 0}
+                    {"  " + fixture.awayTeam.name}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     );
-    // }
-    // return <div>loading</div>;
   }
 }
 

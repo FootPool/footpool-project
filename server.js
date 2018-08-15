@@ -199,7 +199,7 @@ function socketConnection() {
     const repeater = setInterval(function() {
       if (counter < 100) {
         getBets().then(bets => {
-          socket.emit("matchDetails", { scores, bets });
+          socket.emit("matchDetails", { scores, bets, counter });
         });
       } else {
         clearInterval(repeater);
