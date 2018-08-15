@@ -1,7 +1,6 @@
 import React from "react";
 import io from "socket.io-client";
 import Header from "../header/Header";
-import Fixture from "./Fixture";
 import { runInThisContext } from "vm";
 
 class Fixtures extends React.Component {
@@ -35,11 +34,8 @@ class Fixtures extends React.Component {
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
 
     const socket = io.connect("http://localhost:8080");
-    // socket.on("connect", data => {
-    //   socket.emit("join", "hello world from client");
-    // });
+
     socket.on("matchDetails", data => {
-      // console.log(data);
       this.setState(
         { results: data.scores, bets: data.bets, minutesPlayed: counter },
         () => console.log("this is the data", data)
@@ -48,12 +44,9 @@ class Fixtures extends React.Component {
   }
 
   render() {
-    console.log("counter:", this.state.minutesPlayed);
-    // if (this.state.fixtures) {
     var leaders = [];
 
     if (this.state.bets) {
-      //gets unique usernames
       var users = this.state.bets
         .map(bet => bet.username)
         .filter((value, index, self) => self.indexOf(value) === index);
@@ -96,40 +89,6 @@ class Fixtures extends React.Component {
               })}
             </tbody>
           </table>
-          {/* <table>
-            <tbody className="fixture-list__current-scores">
-              <tr className="fixture--table-header">
-                <th>Home Team</th>
-                <th />
-                <th>Score</th>
-                <th />
-                <th>Away Team</th>
-              </tr>
-              {this.state.fixtures.matches.map((fixture, i) => {
-                const relevantResult = this.state.results.find(
-                  result => result.matchId === fixture.id
-                );
-
-                return (
-                  <tr key={i} className="fixture--table-results">
-                    <td className="fixture--table-team-name">
-                      {fixture.homeTeam.name}
-                    </td>
-                    <td className="fixture--table-score">
-                      {relevantResult ? relevantResult.home : 0}
-                    </td>
-                    <td className="fixture-colon"> : </td>
-                    <td className="fixture--table-score">
-                      {relevantResult ? relevantResult.away : 0}
-                    </td>
-                    <td className="fixture--table-team-name">
-                      {fixture.awayTeam.name}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table> */}
         </div>
         <div className="ticker-wrap">
           <div className="ticker-minutes-played">
@@ -137,7 +96,6 @@ class Fixtures extends React.Component {
           </div>
           <div className="ticker">
             {this.state.fixtures.matches.map((fixture, i) => {
-              console.log(fixture);
               const relevantResult = this.state.results.find(
                 result => result.matchId === fixture.id
               );
@@ -156,8 +114,6 @@ class Fixtures extends React.Component {
         </div>
       </div>
     );
-    // }
-    // return <div>loading</div>;
   }
 }
 
