@@ -8,7 +8,8 @@ class Fixtures extends React.Component {
     super();
     this.state = {
       results: [{}],
-      fixtures: { matches: [] }
+      fixtures: { matches: [] },
+      minutesPlayed: 0
     };
   }
 
@@ -112,9 +113,9 @@ class Fixtures extends React.Component {
             </tbody>
           </table>
           <h2>Leaderboard</h2>
-          <table>
-            <tbody>
-              <tr>
+          <table className="form-container">
+            <tbody className="fixture-list__current-scores">
+              <tr className="fixture--table-header">
                 <th> User</th>
                 <th />
                 <th> Correct guesses</th>
@@ -124,17 +125,39 @@ class Fixtures extends React.Component {
                   <tr key={i}>
                     <td>{leader.username}</td>
                     <td />
-                    <td>{leader.correctCount}</td>
+                    <td className="fixture--table-score">
+                      {leader.correctCount}
+                    </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
         </div>
+        <div className="ticker-wrap">
+          <div className="ticker-minutes-played">
+            {this.state.minutesPlayed}"
+          </div>
+          <div className="ticker">
+            {this.state.fixtures.matches.map((fixture, i) => {
+              const relevantResult = this.state.results.find(
+                result => result.matchId === fixture.id
+              );
+              return (
+                <div key={i} className="ticker__item">
+                  <p>
+                    {fixture.homeTeam.name + "  "}
+                    {relevantResult ? relevantResult.home : 0}:
+                    {relevantResult ? relevantResult.away : 0}
+                    {"  " + fixture.awayTeam.name}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     );
-    // }
-    // return <div>loading</div>;
   }
 }
 

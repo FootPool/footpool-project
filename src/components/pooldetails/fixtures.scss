@@ -1,11 +1,54 @@
 .fixtures--container {
   display: flex;
   flex-direction: column;
-  padding-left: 2rem;
-  padding-right: 2rem;
   height: 100vh;
+  background-image: url("/static/images/football-pitch.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .fixtures--fixture-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  color: var(--font-color);
+}
+
+.fixture-table {
+  padding: 2rem 0rem;
   text-align: center;
+  background-color: rgba(202, 204, 206, 0.3);
+}
+
+.fixture--table-header {
+  font-family: var(--subtitle);
+}
+
+.fixture--table-results {
+  font-family: var(--body);
+  height: 1rem;
+}
+
+.fixture--table-team-name {
+  width: 100px;
+}
+
+.fixture--table-score {
+  text-align: center;
+}
+
+.team-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.fixture-colon {
+  text-align: center;
+}
+
+.fixture-list__current-scores tr:nth-child(even) {
+  background-color: var(--secondary-color);
+  color: var(--border-color);
 }

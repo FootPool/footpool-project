@@ -1,0 +1,16 @@
+.site--container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.text-centered {
+  text-align: center;
+}
+
+.full-width {
+  width: 100%;
+}

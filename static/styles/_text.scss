@@ -1,0 +1,41 @@
+h1 {
+  font-family: var(--title);
+  font-size: 2.5rem;
+  color: var(--font-color);
+}
+
+h2 {
+  font-family: var(--subtitle);
+  font-size: 2rem;
+  color: var(--font-color);
+}
+
+h3 {
+  font-family: var(--subtitle);
+  font-size: 1.7rem;
+  color: var(--font-color);
+}
+
+h4 {
+  font-family: var(--subtitle);
+  font-size: 1.5rem;
+  color: var(--font-color);
+}
+
+h5 {
+  font-family: var(--subtitle);
+  font-size: 1.3rem;
+  color: var(--font-color);
+}
+
+p {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--font-color);
+}
+
+button {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--alt-font-color);
+}

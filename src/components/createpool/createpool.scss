@@ -1,15 +1,36 @@
 .createpool--container {
   display: flex;
   flex-direction: column;
-  text-align: left;
   padding-left: 2rem;
   padding-right: 2rem;
   height: 100vh;
+  background-image: url("/static/images/football-pitch.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.createpool--form-input {
-  flex-wrap: nowrap;
-  width: 100%;
-  border: 1px solid grey;
-  padding: 20px 0px;
+.createpool-title {
+  color: var(--font-color);
+  text-align: center;
 }
+
+// .createpool--form-input {
+//   width: 100%;
+//   margin-bottom: 1rem;
+//   border: 1px solid lightgrey;
+//   padding: 15px 0px;
+//   border-radius: 9px;
+//   background-color: gainsboro;
+//   color: black;
+//   font-size: 1rem;
+//   font-family: "Roboto", sans-serif;
+// }
+
+// .action-button {
+//   width: 100%;
+//   background-color: orange;
+//   padding: 15px;
+//   border: none;
+//   border-radius: 15px;
+//   font-size: 1rem;
+// }
