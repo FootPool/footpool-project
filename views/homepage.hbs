@@ -29,7 +29,7 @@
   </header>
 
   <div class="site__subtitle">
-    <h2 class='site__subtitle--text'>Football pool betting with your mates.</h2>
+    <h2 class='site__subtitle--text'>Football sweepstakes with your mates.</h2>
     <button class='action-button'>
       <a href='/signup'>Play Now!</a>
     </button>
@@ -39,19 +39,28 @@
     <div class="site__fixture-list">
       <h3 class="site__fixture-list--title">Upcoming Fixtures</h3>
       <div class="site__fixture-list--fixtures">
-        <p>Team A vs Team B</p>
-        <p>Team C vs Team D</p>
-        <p>Team E vs Team F</p>
-        <p>Team G vs Team H</p>
-        <p>Team I vs Team J</p>
-        <p>Team K vs Team L</p>
+        <table>
+          <tbody>
+            <tr>
+              <th>Home Team</th>
+              <th>vs</th>
+              <th>Away Team</th>
+            </tr>
+            {{#each matches}}
+            <tr>
+              <td>{{this.homeTeam.name}}</td>
+              <td>-</td>
+              <td>{{this.awayTeam.name}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
   <div class="site__more-info--container">
     <h3 class="site__more-info--title">What is FOOTPOOL?</h3>
-    <p class="site__more-info--text">The world's most ethical 'gambling' app. Guess correct scores for points against your mates.</p>
     <p class="site__more-info--text">Place your guesses on the week's fixtures and score points on how accurate you were. See what your friends scored and
       join pools with them.</p>
     <button class='action-button'>

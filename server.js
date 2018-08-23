@@ -46,8 +46,6 @@ io.on("connection", socket => {
   client = socket;
 });
 
-// socketConnection();
-
 ////GET MATCH_ID FROM DATABASE
 
 ////GLOBAL DATA FOR SCORE GENERATOR
@@ -186,7 +184,7 @@ function runGame(bets, scores) {
           .catch(err => console.log("ERROR saving final score in db", err));
       });
     }
-  }, 100);
+  }, 300);
 }
 
 // AUTHENTICATION FUNCTIONS

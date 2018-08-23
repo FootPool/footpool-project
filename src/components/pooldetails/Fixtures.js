@@ -30,17 +30,20 @@ class Fixtures extends React.Component {
       })
       .catch(error => alert("RED CARD! I couldn't find the fixtures!"));
 
-    const socket = io.connect("http://localhost:8080");
+    // const socket = io.connect("http://localhost:8080");
+
+    const socket = io.connect("/");
 
     socket.on("matchDetails", data => {
-      this.setState({ results: data.scores, bets: data.bets });
+      this.setState({
+        results: data.scores,
+        bets: data.bets,
+        minutesPlayed: data.counter
+      });
     });
   }
 
   render() {
-    console.log("bets: ", this.state.bets);
-    console.log("results: ", this.state.results);
-
     let leaders = [];
     let userScores = {};
 
