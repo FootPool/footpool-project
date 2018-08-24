@@ -1,4 +1,5 @@
 const express = require("express");
+const fetch = require("node-fetch");
 
 const router = express.Router();
 
@@ -12,9 +13,21 @@ function isNotLoggedIn(req, res, next) {
 
 // GET HOME PAGE
 router.get("/", isNotLoggedIn, function(req, res) {
-  res.render("homepage");
+  let fixtures = {};
+  fetch(
+    `http://api.football-data.org/v2/competitions/2021/matches?matchday=2`,
+    {
+      headers: {
+        "X-Auth-Token": "db40501154f6451aaa0c34fb63296bb1"
+      }
+    }
+  )
+    .then(res => (res.ok ? res.json() : Promise.reject(res)))
+    .then(data => {
+      res.render("homepage", { matches: data.matches });
+    })
+    .catch(err => console.log(err));
 });
-
 //GET SIGN UP
 router.get("/signup", isNotLoggedIn, function(req, res) {
   res.render("signup");

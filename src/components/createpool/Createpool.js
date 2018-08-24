@@ -38,7 +38,6 @@ class Createpool extends React.Component {
 
   render() {
     if (this.props.poolSaved) {
-      console.log("lastPoolId", this.props.lastPoolId);
       return (
         <Redirect
           to={{
